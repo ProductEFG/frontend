@@ -214,7 +214,7 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
             image4={companySpendDetails[3]?.logo}
           />
           <div className="flex flex-col gap-3 justify-center items-center w-[75%] h-[200px]">
-            <h3 className="text-center pt-10 font-semibold">Share Breakdown</h3>
+            {/* <h3 className="text-center pt-10 font-semibold">Share Breakdown</h3>
             <div className="w-[265px] h-4 flex overflow-hidden rounded-full">
               {companySpendDetails.map((company) => (
                 <div
@@ -227,7 +227,7 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
                   title={`${company.company}: ${company.percentage}%`}
                 />
               ))}
-            </div>
+            </div> */}
             {/* <div className="flex flex-col overflow-y-auto justify-center items-center overflow-x-hidden">
               {companySpendDetails.slice(0, 2).map((company) => (
                 <div
