@@ -48,13 +48,13 @@ const MetricsItem = memo(
     }, []);
 
     return (
-      <div className="bg-white relative w-[726px] rounded-xl flex flex-row p-4">
+      <div className="bg-white relative rounded-xl flex flex-row p-4">
         <Stack className="w-[70%] gap-5">
-          <h4 className="flex flex-row items-center gap-2">
-            <img src={`/images/${icon}.svg`} width={32} height={32} />
+          <h4 className="flex flex-row items-center gap-2 big:text-xl">
+            <img src={`/images/${icon}.svg`} className="w-[32px] big:w-[44px]" />
             {title}
           </h4>
-          <p className="text-xs leading-6">
+          <p className="text-xs leading-6 big:text-sm">
             {description}{" "}
             {companyList.length > 0 && (
               <button onClick={handleOpen}>
@@ -78,13 +78,13 @@ const MetricsItem = memo(
           )}
 
           <Stack className="relative text-right gap-6">
-            <p className="text-xs">Last 24h</p>
+            <p className="text-xs big:text-sm">Last 24h</p>
             <div className="flex flex-col gap-1">
               <p className="font-semibold">
                 {name ? `${name} (${acronym})` : "No Company Yet"}
               </p>
               {(title === "Trending Now" || title === "Highest Return") && (
-                <h1 className="text-2xl flex flex-row gap-4 items-center justify-end">
+                <h1 className="big:text-3xl text-2xl flex flex-row gap-4 items-center justify-end">
                   <Price price={price} styles="absolute -right-4 top-0 w-4" />
                   <Return
                     type={current_return > 0 ? "positive" : "negative"}
@@ -93,13 +93,12 @@ const MetricsItem = memo(
                 </h1>
               )}
               {(title === "Most Traded" || title === "Most Visited") && (
-                <div className="text-2xl flex flex-row gap-2 items-center justify-end -translate-y-1">
+                <div className="big:text-3xl ext-2xl flex flex-row gap-2 items-center justify-end -translate-y-1">
                   {title === "Most Traded" ? (
                     <img
                       src="/images/most_traded_icon.svg"
                       alt="Change"
-                      width={34}
-                      height={34}
+                      className="w-[34px] big:w-[44px]"
                     />
                   ) : (
                     <img

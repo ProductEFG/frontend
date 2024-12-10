@@ -57,14 +57,14 @@ const Login = () => {
 
   return (
     <div className="flex flex-row w-screen h-screen overflow-hidden p-6">
-      <div className="flex flex-row">
-        <img src="/images/login.svg" alt="Login" />
+      <div className="flex flex-row big:justify-center big:items-center">
+        <img src="/images/login.svg" alt="Login" className="big:w-[80%]" />
 
         <div className="flex flex-col">
-          <div className="bg-white h-[550px] flex flex-col rounded-xl p-5 m-2 ml-[18px]">
+          <div className="bg-white h-[550px] flex flex-col rounded-xl p-5 m-2 ml-[18px] big:justify-between">
             <div className="flex flex-col justify-center items-center gap-5">
               <div className="flex flex-row justify-center items-center">
-                <img src="/images/main_logos.jpg" />
+                <img src="/images/main_logos.jpg" alt="Login Page" />
               </div>
 
               <div className="flex flex-col gap-2">

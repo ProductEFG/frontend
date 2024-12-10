@@ -89,6 +89,10 @@ export default {
         256: "0 0 256px",
         100: "0 0 100%",
       },
+      screens: {
+        big: { raw: "(min-width: 1440px) and (max-height: 1028px)" },
+        normal: { raw: "(min-width: 1280px) and (max-height: 750px)" },
+      },
     },
   },
   plugins: [],

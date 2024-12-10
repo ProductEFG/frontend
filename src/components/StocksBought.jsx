@@ -172,9 +172,9 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
     };
   }, [userStocks, user]);
   return (
-    <Stack spacing={7} className="bg-white rounded-xl p-4 w-full h-full">
+    <div className="p-4">
       <div className="flex flex-row justify-between items-center">
-        <div>
+        <div className="space-y-2">
           <h1 className="text-2xl text-[#6E7191] font-semibold">
             Current Stock Value
           </h1>
@@ -207,14 +207,16 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
       </div>
       {companySpendDetails.length > 0 ? (
         <div className="flex flex-row w-full justify-between">
-          <Images
-            image1={companySpendDetails[0]?.logo}
-            image2={companySpendDetails[1]?.logo}
-            image3={companySpendDetails[2]?.logo}
-            image4={companySpendDetails[3]?.logo}
-          />
-          <div className="flex flex-col gap-3 justify-center items-center w-[75%] h-[200px]">
-            {/* <h3 className="text-center pt-10 font-semibold">Share Breakdown</h3>
+          <div className="relative pt-16">
+            <Images
+              image1={companySpendDetails[0]?.logo}
+              image2={companySpendDetails[1]?.logo}
+              image3={companySpendDetails[1]?.logo}
+              image4={companySpendDetails[1]?.logo}
+            />
+          </div>
+          <div className="flex flex-col gap-0 items-center w-full mt-4 ml-10">
+            <h3 className="text-center font-semibold pb-3">Share Breakdown</h3>
             <div className="w-[265px] h-4 flex overflow-hidden rounded-full">
               {companySpendDetails.map((company) => (
                 <div
@@ -227,45 +229,85 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
                   title={`${company.company}: ${company.percentage}%`}
                 />
               ))}
-            </div> */}
-            {/* <div className="flex flex-col overflow-y-auto justify-center items-center overflow-x-hidden">
-              {companySpendDetails.slice(0, 2).map((company) => (
-                <div
-                  key={"text" + company.company}
-                  className="flex flex-row p-2 gap-2 pt-4 items-center"
-                >
+            </div>
+            <div className="flex flex-row justify-between gap-2">
+              <div className="flex flex-col overflow-y-auto text-sm overflow-x-hidden">
+                {companySpendDetails.slice(0, 3).map((company) => (
                   <div
-                    className={`w-3 h-3 rounded-full`}
-                    style={{ backgroundColor: `${company.color}` }}
-                  />
-                  <p
-                    className="text-[#A0A3BD] w-[45%] overflow-hidden"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "8px",
-                      maxWidth: "150px",
-                      whiteSpace: "nowrap",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
+                    key={"text" + company.company}
+                    className="flex flex-row p-2 gap-2 pt-4 items-center"
                   >
-                    <span
-                      style={{ textOverflow: "ellipsis", overflow: "hidden" }}
+                    <div
+                      className={`w-2 h-2 rounded-full`}
+                      style={{ backgroundColor: `${company.color}` }}
+                    />
+                    <p
+                      className="text-[#A0A3BD] w-[35%] overflow-hidden"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        maxWidth: "100px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
                     >
-                      {company.company}
-                    </span>
-                  </p>
-                  <Price
-                    price={company.totalSpent.toLocaleString()}
-                    styles={"absolute -right-5 -top-0.5 w-4"}
-                  />
-                  <p className="w-[20%] pl-4 font-semibold">
-                    ({company.percentage.toLocaleString()}%)
-                  </p>
-                </div>
-              ))}
-            </div> */}
+                      <span
+                        style={{ textOverflow: "ellipsis", overflow: "hidden" }}
+                      >
+                        {company.company}
+                      </span>
+                    </p>
+                    <Price
+                      price={company.totalSpent.toLocaleString()}
+                      styles={"absolute -right-3.5 -top-0.5 w-3"}
+                    />
+                    <p className="w-[20%] pl-2 font-semibold">
+                      ({company.percentage.toLocaleString()}%)
+                    </p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex flex-col overflow-y-auto text-sm overflow-x-hidden">
+                {companySpendDetails.slice(3, 6).map((company) => (
+                  <div
+                    key={"text" + company.company}
+                    className="flex flex-row p-2 gap-2 pt-4 items-center"
+                  >
+                    <div
+                      className={`w-2 h-2 rounded-full`}
+                      style={{ backgroundColor: `${company.color}` }}
+                    />
+                    <p
+                      className="text-[#A0A3BD] w-[35%] overflow-hidden"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px",
+                        maxWidth: "100px",
+                        whiteSpace: "nowrap",
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      <span
+                        style={{ textOverflow: "ellipsis", overflow: "hidden" }}
+                      >
+                        {company.company}
+                      </span>
+                    </p>
+                    <Price
+                      price={company.totalSpent.toLocaleString()}
+                      styles={"absolute -right-3.5 -top-0.5 w-3"}
+                    />
+                    <p className="w-[20%] pl-2 font-semibold">
+                      ({company.percentage.toLocaleString()}%)
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -280,7 +322,7 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
           userStocksDetails={companySpendDetails}
         />
       )}
-    </Stack>
+    </div>
   );
 };
 

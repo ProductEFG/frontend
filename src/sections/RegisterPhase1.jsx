@@ -54,16 +54,16 @@ const RegisterPhase1 = ({ data, updateData, onNext }) => {
   };
 
   return (
-    <div className="flex flex-row p-6">
+    <div className="flex flex-row p-6 big:items-center h-screen">
       <img
         src="/images/register.svg"
-        className="rounded-xl object-cover"
-        alt="Login"
+        className="rounded-xl object-cover big:w-[80%]"
+        alt="Register"
       />
       <div className="flex flex-col w-1/2">
-        <div className="bg-white flex flex-col justify-between rounded-xl m-2 ml-[18px] p-8 gap-6">
+        <div className="bg-white flex flex-col justify-between rounded-xl m-2 ml-[18px] p-8 gap-6 ">
           <div className="flex flex-row justify-center items-center">
-            <img src="/images/main_logos.svg" />
+            <img src="/images/main_logos.svg" alt="Register Page" className=""/>
           </div>
 
           <div className="flex flex-col gap-1">

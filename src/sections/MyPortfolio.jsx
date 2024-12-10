@@ -39,27 +39,29 @@ const MyPortfolio = ({ withdrawHandle }) => {
       controller.abort();
     };
   }, [user]);
+
   return (
-    <section className="min-h-[70vh] p-5">
-      <Stack direction={"row"} spacing={2}>
-        <div className="w-[424px] h-[550px] bg-purple rounded-2xl">
-          <BalanceBreakdown withdrawHandle={withdrawHandle} />
+    <section className="flex flex-row h-full pl-5 w-full gap-5">
+      <div className="w-[36.1%] bg-purple rounded-2xl">
+        <BalanceBreakdown withdrawHandle={withdrawHandle} />
+      </div>
+
+      <div className="w-[62%] h-full space-y-4">
+        <div className="w-full h-[53%] bg-white rounded-2xl">
+          <StocksBought
+            userStocks={userStocks}
+            setNumberOfAssets={setNumberOfAssets}
+          />
         </div>
-        <Stack direction={"column"} spacing={2} className="w-[730px] h-[550px]">
-          <div className="w-full h-[309px]">
-            <StocksBought
-              userStocks={userStocks}
-              setNumberOfAssets={setNumberOfAssets}
-            />
-          </div>
-          <div className="w-full h-[224px]">
-            <UserProfileInfo
-              successRate={successRate}
-              numberOfAssets={numberOfAssets}
-            />
-          </div>
-        </Stack>
-      </Stack>
+
+        <div className="w-full h-[44%] bg-white rounded-2xl">
+          <UserProfileInfo
+            successRate={successRate}
+            numberOfAssets={numberOfAssets}
+          />
+        </div>
+      </div>
+
       {/* <div className="flex flex-row gap-5">
         <div className="w-[424px] h-[550px] bg-purple rounded-2xl">
           <BalanceBreakdown withdrawHandle={withdrawHandle} />

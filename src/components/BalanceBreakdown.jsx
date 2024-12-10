@@ -58,9 +58,9 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
   }, [user]);
 
   return (
-    <div className="relative p-3.5">
+    <div className="relative p-4">
       <Stack direction={"column"}>
-        <h1 className="text-[37px] text-white font-me">Total Balance</h1>
+        <h1 className="text-[37px] text-white">Total Balance</h1>
         <div className="flex flex-row items-center gap-1">
           <p className="text-white text-[35px]">
             {user.getTotalBalance().toFixed(2)}
@@ -170,12 +170,12 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
             />
           </div>
         </div>
-        {/* <img
+        <img
           src="/images/bag_of_money.svg"
           alt="Bag of Money"
-          className="absolute -right-12 -top-2"
-          width={310}
-        /> */}
+          className="absolute -right-[8%] top-[26%]"
+          width={220}
+        />
       </Stack>
       <Button
         name="Withdraw"

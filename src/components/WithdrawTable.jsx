@@ -40,13 +40,16 @@ const fixedHeaderContent = (columns) => (
       <TableCell
         key={column.dataKey}
         variant="head"
-        align={"left"}
-        style={{ width: column.width }}
+        align={"center"}
+        style={{
+          width: column.width,
+          whiteSpace: "nowrap",
+        }}
         sx={{
-          fontSize: "21px",
+          fontSize: "20px",
           color: "#9AA0A6",
           border: "none",
-          padding: 1.5,
+          padding: 1,
           bgcolor: "white",
         }}
       >
@@ -65,12 +68,12 @@ const rowContent = (columns, row) => (
     {columns.map((column) => (
       <TableCell
         key={column.dataKey}
-        align={"left"}
+        align={"center"}
         sx={{
-          fontSize: "21px",
-          fontWeight: "100",
+          fontSize: "20px",
+          fontWeight: "semibold",
           border: "none",
-          padding: 1.5,
+          padding: 1,
         }}
       >
         {(column.label === "Cash Balance" ||
@@ -80,7 +83,7 @@ const rowContent = (columns, row) => (
             <Price
               price={row[column.dataKey].toFixed(0)}
               styles={"absolute -top-1 -right-5 w-4"}
-              textStyles={"!font-light"}
+              font={"light"}
             />
           </div>
         )}
@@ -99,7 +102,14 @@ const rowContent = (columns, row) => (
 
 export default function WithdrawTable({ columns, rows }) {
   return (
-    <div style={{ height: 250, width: "100%", border: "none" }}>
+    <div
+      style={{
+        height: "56vh",
+        width: "100%",
+        border: "none",
+        paddingRight: 20,
+      }}
+    >
       {rows.length > 0 ? (
         <TableVirtuoso
           data={rows}

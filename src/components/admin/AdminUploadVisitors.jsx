@@ -54,7 +54,7 @@ const AdminUploadVisitors = ({
       await workbook.xlsx.load(buffer);
 
       // Access the first worksheet
-      const worksheet = workbook.getWorksheet(1);
+      const worksheet = workbook.worksheets[0];
       if (!worksheet) {
         throw new Error("Worksheet not found. Please check the file content.");
       }

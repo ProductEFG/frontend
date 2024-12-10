@@ -110,6 +110,11 @@ const AdminCompanyDetailsModal = memo(
       formData.append("companyId", company._id);
       formData.append("name", companyInfo.name || "");
       formData.append("description", companyInfo.description || "");
+      formData.append("acronym", companyInfo.acronym || "");
+      formData.append(
+        "establishment_type",
+        companyInfo.establishment_type || ""
+      );
 
       if (companyInfo.image) {
         formData.append("logo", companyInfo.image);

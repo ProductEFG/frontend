@@ -19,20 +19,22 @@ const BuyStockWindow = ({ company }) => {
 
   const handleBuyStocks = async () => {
     setLoading(true);
-    // Validate quantity
-    if (quantity < 1) {
-      setError("Quantity must be greater than 0!");
-      return;
-    }
-
-    // Check if user has enough balance
-    const totalCost = quantity * company.current_price;
-    if (totalCost > user.wallet_balance) {
-      setError("Not enough kidzos!");
-      return;
-    }
 
     try {
+      // Validate quantity
+      if (quantity < 1) {
+        throw new Error("Quantity must be greater than 0!");
+      }
+      if (!Number.isInteger(quantity)) {
+        throw new Error("Quantity must be a whole number!");
+      }
+
+      // Check if user has enough balance
+      const totalCost = quantity * company.current_price;
+      if (totalCost > user.wallet_balance) {
+        throw new Error("Not enough kidzos!");
+      }
+
       const userStocksData = {
         userId: user._id,
         companyId: company._id,
@@ -49,7 +51,6 @@ const BuyStockWindow = ({ company }) => {
       setError("");
     } catch (error) {
       setError(error.message);
-      return;
     } finally {
       setLoading(false);
     }
@@ -170,7 +171,7 @@ const BuyStockWindow = ({ company }) => {
           alt="Trade Between"
           width={42}
           height={42}
-          className="absolute left-[45%] top-[38%]"
+          className="absolute left-[45%] top-[40%]"
         />
         {error.length > 0 && (
           <p className="text-red-600 text-center">{error}</p>
@@ -180,7 +181,7 @@ const BuyStockWindow = ({ company }) => {
         )}
       </div>
       <div
-        className={`${
+        className={`text-xs ${
           error.length > 0 || success.length > 0 ? "pt-0" : "pt-8"
         }`}
       >

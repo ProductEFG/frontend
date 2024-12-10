@@ -41,22 +41,32 @@ const columns = [
 const CustomSlider = styled(Slider)({
   color: "#6143F0", // Purple color for filled area
   width: "100%",
-  height: "95%", // Height of the slider track
+  height: "50%",
+  borderRadius: 4,
   "& .MuiSlider-track": {
     backgroundColor: "#6143F0", // Purple color for the filled track
   },
   "& .MuiSlider-rail": {
-    background: "linear-gradient(135deg, #ECEDED, #919DB0)",
+    background: "#3D424A",
+    opacity: 0.1,
   },
   "& .MuiSlider-thumb": {
-    width: 34,
-    height: 40,
+    width: 20,
+    height: 22,
     borderRadius: 4,
     backgroundColor: "#fff",
     border: "2px solid #6143F0",
+    transition: "width 0.3s, height 0.3s",
   },
   "& .MuiSlider-thumb:hover": {
     boxShadow: "0px 0px 0px 8px rgba(156, 39, 176, 0.16)", // Hover effect
+  },
+  // Media query for specific resolution
+  "@media (min-width: 1440px) and (min-height: 1028px)": {
+    "& .MuiSlider-thumb": {
+      width: 32,
+      height: 38,
+    },
   },
 });
 
@@ -120,52 +130,61 @@ const WithdrawSection = ({ navigationHandle }) => {
   }, []);
 
   return (
-    <Stack spacing={3}>
-      <Stack direction={"row"} spacing={3} className="w-full">
-        <div className="rounded-2xl bg-white p-4 flex flex-col gap-5 w-[25%]">
-          <div className="flex flex-row gap-3 justify-start items-center">
+    <Stack spacing={2} direction={"row"}>
+      <Stack direction={"column"} spacing={2} className="h-full w-[29%]">
+        <div className="rounded-2xl bg-white p-4 flex flex-col gap-0 h-[39%] w-full">
+          <div className="flex flex-row gap-2 justify-start items-center">
             <img
               src="/images/available_withdraw.svg"
               alt="Available to Withdraw"
-              width={35}
-              height={35}
+              className="big:w-[35px] w-[24px]"
             />
-            <h6 className="font-semibold text-lg">Available to withdraw</h6>
+            <h6 className="font-semibold big:text-lg text-sm">
+              Available to withdraw
+            </h6>
           </div>
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center pt-5">
             <Price
               price={Math.floor(user.wallet_balance)}
-              styles={"absolute -top-3 -right-8 w-8"}
-              textStyles={"text-5xl"}
+              styles={
+                "absolute -top-1 -right-5 w-5 big:w-8 big:-top-3 big:-right-8"
+              }
+              textStyles={"big:text-5xl text-4xl"}
             />
           </div>
-          <div className="flex justify-center h-[200px]">
-            <img src="/images/money.svg" alt="Money" width={200} height={200} />
+          <div className="flex justify-center">
+            <img
+              src="/images/money.svg"
+              alt="Money"
+              className="w-[122px] big:w-[200px] -translate-y-1"
+            />
           </div>
         </div>
-        <div className="rounded-2xl bg-white p-8 pl-10 w-[75%] space-y-4">
+        <div className="rounded-2xl bg-white p-2 pt-8 h-fit w-fit flex flex-col">
           <div className="flex justify-center items-center">
             <Price
               price={withdrawQuantity}
-              textStyles={"text-7xl"}
-              styles={"absolute -top-2 -right-14 w-14"}
+              textStyles={"big:text-6xl text-5xl"}
+              styles={"absolute -top-2 big:-right-9 big:w-8 w-7 -right-7"}
             />
           </div>
-          <div className="flex flex-col justify-center items-center gap-3">
-            <p className="text-white-300 text-sm p-4 pt-5 tracking-wider">
+          <div className="flex flex-col justify-center items-center">
+            <p className="text-white-300 big:text-sm pt-4 pb-3 text-center text-[10px] big:pt-8">
               Move the Below slider to select a specific amount you want to
               withdraw
             </p>
-            <CustomSlider
-              value={withdrawQuantity}
-              onChange={handleChange}
-              max={Math.floor(user.wallet_balance)}
-              valueLabelDisplay="on"
-            />
+            <div className="w-full h-full pr-8 pt-0 pb-0 pl-10 mt-3 big:h-[80px]">
+              <CustomSlider
+                value={withdrawQuantity}
+                onChange={handleChange}
+                max={Math.floor(user.wallet_balance)}
+                valueLabelDisplay="off"
+              />
+            </div>
           </div>
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-center pb-2 pr-4 pl-4 mt-6">
             <button
-              className="flex items-center justify-center flex-row gap-2 bg-purple w-[206px] h-[51px] rounded-full text-white text-[18px] font-extralight tracking-wider"
+              className="w-full flex items-center justify-center flex-row gap-2 bg-purple rounded-full text-white big:text-[18px] text-[10px] p-2"
               onClick={handleWithdraw}
               disabled={withdrawLoading}
             >
@@ -173,23 +192,32 @@ const WithdrawSection = ({ navigationHandle }) => {
                 <Loading otherClasses={"w-5 h-5 border-white"} />
               ) : (
                 <>
-                  Withdraw <img src="/images/back_arrow.svg" alt="back arrow" />
+                  Withdraw{" "}
+                  <img
+                    src="/images/back_arrow.svg"
+                    alt="back arrow"
+                    className="w-[14px] big:w-[24px]"
+                  />
                 </>
               )}
             </button>
           </div>
         </div>
       </Stack>
-      <div className="w-[1352px] h-[376px] rounded-2xl bg-white p-5 flex flex-col gap-5">
-        <div className="flex flex-row justify-between items-center">
+      <div className="rounded-2xl bg-white flex flex-col gap-5 w-full">
+        <div className="flex flex-row justify-between items-center pl-5 pt-5">
           <div className="flex flex-row gap-4 items-center justify-start">
-            <img src="/images/withdraw_img.svg" alt="Withdraw Image" />
-            <p className="text-[24px] tracking-wider">Withdraw History</p>
+            <img
+              src="/images/withdraw_img.svg"
+              alt="Withdraw Image"
+              className="w-[44px]"
+            />
+            <p className="text-[24px]">Withdraw History</p>
           </div>
         </div>
         <div>
           {withdrawListLoading ? (
-            <div className="flex justify-center items-center h-[20vh]">
+            <div className="flex justify-center items-center h-full">
               <Loading otherClasses={"w-10 h-10"} />
             </div>
           ) : (

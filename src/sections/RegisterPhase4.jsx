@@ -90,12 +90,12 @@ const RegisterPhase4 = ({ data, updateData, onNext, onBack }) => {
           </div>
         </Stack>
       </Box>
-      <div className="grid grid-cols-5 w-[886px] gap-x-3 gap-y-3 mt-5 overflow-y-auto">
-        {selectedList.slice(0, 15).map((avatar, index) => (
+      <div className="grid grid-cols-5 big:w-[1200px] big:h-[70vh] w-[886px] big:gap-x-5 big:gap-y-5  gap-x-3 gap-y-3 mt-5 overflow-y-auto">
+        {selectedList.map((avatar, index) => (
           <div
             key={index}
             onClick={() => setSelectedAvatar(avatar)}
-            className={`relative w-[160px] h-[147px] p-4 pt-5 rounded-2xl border ${
+            className={`relative big:w-[240px] big:h-[227px] w-[160px] h-[147px] p-4 pt-5 rounded-2xl border ${
               avatar === selectedAvatar && "border-purple"
             } cursor-pointer`}
           >

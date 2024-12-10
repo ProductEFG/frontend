@@ -18,7 +18,7 @@ const CompanyList = memo(
           <div
             className={`overflow-auto ${
               isAdminHome ? "max-h-[74vh]" : "max-h-[55vh]"
-            }`}
+            } big:max-h-[70vh]`}
           >
             <Grid2 container rowSpacing={"14px"} columnSpacing={"14px"}>
               {filteredcompanies.length > 0 ? (
