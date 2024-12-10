@@ -197,7 +197,7 @@ const MetricsList = React.memo(({ handleOpen }) => {
 
   return (
     <div>
-      <Stack spacing={2}>
+      <Stack spacing={2} className="overflow-y-auto max-h-[60vh]">
         <MetricsItem
           title="Trending Now"
           tableHeader="Current Number of Investors"

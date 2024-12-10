@@ -49,6 +49,7 @@ const CompanyDetailsModal = memo(({ open, handleClose, company }) => {
 
       const history = await stocksHistoryService.getCompanyHistory(company._id);
       setCompanyHistory(history);
+      console.log(history)
 
       if (history.length > 0) {
         const totalMonthlyVisitors = history.reduce((total, entry) => {
