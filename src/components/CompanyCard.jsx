@@ -10,11 +10,7 @@ const CompanyCard = memo(({ company, handleOpen }) => {
   const location = useLocation();
   const isAdminHome = location.pathname === "/admin/home";
   return (
-    <Grid
-      key={company._id}
-      size={isAdminHome ? 4 : 6}
-      className="bg-white rounded-xl p-2"
-    >
+    <Grid key={company._id} size={4} className="bg-white rounded-xl p-2">
       <Stack spacing={1}>
         <div className="flex flex-row justify-between text-sm font-semibold">
           <div
@@ -78,7 +74,7 @@ const CompanyCard = memo(({ company, handleOpen }) => {
               price={`${
                 company.current_change < 0 ? "" : "+"
               }${company.current_change.toFixed(2)}`}
-              styles="absolute -right-3 top-0 w-3"
+              styles="absolute -right-3 top-0 w-2.5"
               textStyles={`text-sm ${
                 company.current_change < 0 ? "text-red-600" : "text-green-500"
               }`}
@@ -103,7 +99,7 @@ const CompanyCard = memo(({ company, handleOpen }) => {
           </p>
         </div>
         <button
-          className="text-xs text-[#0086FF] flex flex-row gap-1 justify-end items-center"
+          className="text-xs text-[#0086FF] flex flex-row gap-1 justify-end items-center pr-2"
           onClick={() => handleOpen(company)}
         >
           View Company Details{" "}

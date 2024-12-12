@@ -211,8 +211,8 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
             <Images
               image1={companySpendDetails[0]?.logo}
               image2={companySpendDetails[1]?.logo}
-              image3={companySpendDetails[1]?.logo}
-              image4={companySpendDetails[1]?.logo}
+              image3={companySpendDetails[2]?.logo}
+              image4={companySpendDetails[3]?.logo}
             />
           </div>
           <div className="flex flex-col gap-0 items-center w-full mt-4 ml-10">

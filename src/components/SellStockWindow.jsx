@@ -22,6 +22,9 @@ const SellStockWindow = ({ company }) => {
       if (quantity < 1) {
         throw new Error("Quantity must be greater than 0!");
       }
+      if (!Number.isInteger(parseFloat(quantity))) {
+        throw new Error("Quantity must be a whole number!");
+      }
       // Check if user has enough shares
       if (quantity > company.quantity) {
         throw new Error(

@@ -74,15 +74,16 @@ const MarketOverview = ({ balance }) => {
 
   return (
     <section className="min-h-[70vh] pt-10">
-      <Stack direction={{ md: "column", lg: "row" }} spacing={0}>
-        <Stack spacing={2} className="mr-5 md:w-[51rem] md:h-[10rem]">
-          <h3 className="big:text-2xl text-xl font-bold">
-            Interesting Metrics
-          </h3>
-          <MetricsList handleOpen={handleOpen} />
-        </Stack>
-        <Stack spacing={2} width={{ md: "100%", lg: "50%" }}>
+      <Stack direction={"row"} spacing={3}>
+        <Stack spacing={2} className="mr-3 w-[62%]">
           <h3 className="text-xl font-bold">Companies You Can Invest In</h3>
+          <CompanyList
+            companiesLoading={companiesLoading}
+            filteredcompanies={filteredcompanies}
+            handleOpen={handleOpen}
+          />
+        </Stack>
+        <Stack spacing={2} className="w-[38%]">
           {/* <FormField
             type="text"
             startAdornmentUrl="/images/magnifying_glass.svg"
@@ -91,11 +92,10 @@ const MarketOverview = ({ balance }) => {
             onChange={(e) => setSearchText(e.target.value)}
             backgroundColor="#FFFFFF"
           /> */}
-          <CompanyList
-            companiesLoading={companiesLoading}
-            filteredcompanies={filteredcompanies}
-            handleOpen={handleOpen}
-          />
+          <h3 className="big:text-2xl text-xl font-bold">
+            Interesting Metrics
+          </h3>
+          <MetricsList handleOpen={handleOpen} />
         </Stack>
       </Stack>
       {open && (

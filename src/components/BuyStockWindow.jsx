@@ -25,7 +25,7 @@ const BuyStockWindow = ({ company }) => {
       if (quantity < 1) {
         throw new Error("Quantity must be greater than 0!");
       }
-      if (!Number.isInteger(quantity)) {
+      if (!Number.isInteger(parseFloat(quantity))) {
         throw new Error("Quantity must be a whole number!");
       }
 
@@ -174,10 +174,10 @@ const BuyStockWindow = ({ company }) => {
           className="absolute left-[45%] top-[40%]"
         />
         {error.length > 0 && (
-          <p className="text-red-600 text-center">{error}</p>
+          <p className="text-red-600 text-center text-sm">{error}</p>
         )}
         {success.length > 0 && (
-          <p className="text-green-500 text-center">{success}</p>
+          <p className="text-green-500 text-center text-sm">{success}</p>
         )}
       </div>
       <div

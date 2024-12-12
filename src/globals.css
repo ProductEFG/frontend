@@ -1,7 +1,11 @@
+@import "swiper/css";
+@import "swiper/css/pagination";
+@import "swiper/css/navigation";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Ensure the React Datepicker wrapper spans full width */
 .react-datepicker-wrapper {
   width: 100%;
 }
@@ -12,19 +16,20 @@
   }
 
   body {
-    @apply bg-cover bg-center;
+    @apply bg-cover bg-center font-poppins;
     background-color: var(--background-color);
-    @apply font-poppins;
   }
 }
 
 @layer components {
+  /* Button styles */
   .button {
     @apply bg-blue-700 text-white font-bold py-2 px-4 rounded-full;
     @apply hover:bg-blue-500;
     @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50;
   }
 
+  /* Company Card Background Styling */
   .company-card::before {
     content: "";
     position: absolute;
@@ -33,8 +38,8 @@
     width: 100%;
     height: 100%;
     background-color: #6143f0; /* Adjust as needed */
-    transform: translate(10px, 10px); /* Adjust the offset */
-    z-index: -2; /* Keep it behind the content */
+    transform: translate(10px, 10px); /* Offset shadow */
+    z-index: -2; /* Behind the content */
   }
 
   .company-card-2::before {
@@ -45,7 +50,53 @@
     width: 100%;
     height: 100%;
     background-color: #5ad9d5; /* Adjust as needed */
-    transform: translate(10px, 10px); /* Adjust the offset */
-    z-index: -2; /* Keep it behind the content */
+    transform: translate(10px, 10px); /* Offset shadow */
+    z-index: -2; /* Behind the content */
+  }
+
+  /* Swiper Customizations */
+  .swiper-button-next,
+  .swiper-button-prev {
+    @apply text-gray-700 hover:text-gray-900;
+  }
+
+  .swiper-button-next {
+    @apply w-full;
+  }
+
+  .swiper-button-prev {
+    @apply w-full;
+  }
+
+  .swiper-button-prev::after {
+    @apply text-[24px];
+  }
+
+  .swiper-button-next::after {
+    @apply text-[24px];
+  }
+
+  .swiper-pagination {
+    @apply flex justify-center gap-2;
+  }
+
+  .swiper-pagination .swiper-pagination-bullet {
+    @apply w-5 h-5  border border-black bg-white rounded-full;
+  }
+
+  .swiper-pagination .swiper-pagination-bullet-active {
+    @apply bg-transparent relative; /* Make the active bullet transparent */
+  }
+
+  .swiper-pagination .swiper-pagination-bullet-active::before {
+    content: "";
+    position: absolute; /* Absolutely position the dot inside the bullet */
+    top: 50%; /* Center vertically */
+    left: 50%; /* Center horizontally */
+    transform: translate(
+      -50%,
+      -50%
+    ); /* Adjust the dot to be perfectly centered */
+    @apply w-2.5 h-2.5 bg-purple rounded-full;
   }
 }

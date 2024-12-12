@@ -10,6 +10,9 @@ import { companyService } from "../services/company.service.js";
 import Loading from "./Loading.jsx";
 import { useAuth } from "../providers/AuthProvider.jsx";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Navigation } from "swiper/modules";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -48,12 +51,18 @@ const MetricsItem = memo(
     }, []);
 
     return (
-      <div className="bg-white relative rounded-xl flex flex-row p-4">
-        <Stack className="w-[70%] gap-5">
-          <h4 className="flex flex-row items-center gap-2 big:text-xl">
-            <img src={`/images/${icon}.svg`} className="w-[32px] big:w-[44px]" />
-            {title}
-          </h4>
+      <div className="bg-white rounded-xl flex flex-row p-4 relative w-full">
+        <Stack direction={"column"} className="flex flex-col gap-3">
+          <div className="flex flex-row gap-5 justify-between items-center">
+            <h4 className="flex flex-row items-center gap-2 big:text-xl">
+              <img
+                src={`/images/${icon}.svg`}
+                className="w-[32px] big:w-[44px]"
+              />
+              {title}
+            </h4>
+            <p className="text-xs big:text-sm">Last 24h</p>
+          </div>
           <p className="text-xs leading-6 big:text-sm">
             {description}{" "}
             {companyList.length > 0 && (
@@ -64,64 +73,59 @@ const MetricsItem = memo(
               </button>
             )}
           </p>
-        </Stack>
-
-        <div className="relative w-[30%]">
+          <div className="flex flex-col gap-1 items-end">
+            <p className="font-semibold">
+              {name ? `${name} (${acronym})` : "No Company Yet"}
+            </p>
+            {(title === "Trending Now" || title === "Highest Return") && (
+              <h1 className="big:text-3xl text-2xl flex flex-row gap-4 items-center">
+                <Price
+                  price={price && price.toFixed(2)}
+                  styles="absolute -right-4 top-0 w-4"
+                />
+                <Return
+                  type={current_return > 0 ? "positive" : "negative"}
+                  number={current_return && Math.abs(current_return).toFixed(2)}
+                />
+              </h1>
+            )}
+            {(title === "Most Traded" || title === "Most Visited") && (
+              <div className="big:text-3xl ext-2xl flex flex-row gap-2 items-center -translate-y-1">
+                {title === "Most Traded" ? (
+                  <img
+                    src="/images/most_traded_icon.svg"
+                    alt="Change"
+                    className="w-[34px] big:w-[44px]"
+                  />
+                ) : (
+                  <img
+                    src="/images/visitors.svg"
+                    alt="Change"
+                    width={34}
+                    height={34}
+                  />
+                )}
+                <div className="flex flex-col gap-0 justify-center">
+                  <p className="font-semibold h-6 text-lg">
+                    {" "}
+                    {number && number.toLocaleString()}
+                  </p>
+                  <span className="text-white-300 text-xs">
+                    {title === "Most Traded" ? "Trades" : "Visitors"}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
           {/* Background Image */}
           {logo && (
             <img
               src={`${backendUrl}/images/logos/${logo}`}
               alt={`${name} logo`}
-              className="absolute inset-0 opacity-10 w-full h-full object-contain"
-              style={{ right: 0, top: 0 }}
+              className="absolute opacity-10 object-contain w-[50%] right-[3%] top-[30%]"
             />
           )}
-
-          <Stack className="relative text-right gap-6">
-            <p className="text-xs big:text-sm">Last 24h</p>
-            <div className="flex flex-col gap-1">
-              <p className="font-semibold">
-                {name ? `${name} (${acronym})` : "No Company Yet"}
-              </p>
-              {(title === "Trending Now" || title === "Highest Return") && (
-                <h1 className="big:text-3xl text-2xl flex flex-row gap-4 items-center justify-end">
-                  <Price price={price} styles="absolute -right-4 top-0 w-4" />
-                  <Return
-                    type={current_return > 0 ? "positive" : "negative"}
-                    number={Math.abs(current_return)}
-                  />
-                </h1>
-              )}
-              {(title === "Most Traded" || title === "Most Visited") && (
-                <div className="big:text-3xl ext-2xl flex flex-row gap-2 items-center justify-end -translate-y-1">
-                  {title === "Most Traded" ? (
-                    <img
-                      src="/images/most_traded_icon.svg"
-                      alt="Change"
-                      className="w-[34px] big:w-[44px]"
-                    />
-                  ) : (
-                    <img
-                      src="/images/visitors.svg"
-                      alt="Change"
-                      width={34}
-                      height={34}
-                    />
-                  )}
-                  <div className="flex flex-col gap-0 justify-center">
-                    <p className="font-semibold h-6 text-lg">
-                      {" "}
-                      {number && number.toLocaleString()}
-                    </p>
-                    <span className="text-white-300 text-xs">
-                      {title === "Most Traded" ? "Trades" : "Visitors"}
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-          </Stack>
-        </div>
+        </Stack>
 
         <Modal
           keepMounted
@@ -163,12 +167,13 @@ const MetricsList = React.memo(({ handleOpen }) => {
     most_visited: [],
   });
   const [metricsLoading, setMetricsLoading] = useState(false);
+  const [numberPerPage, setNumberPerPage] = useState(2);
 
   const fetchMetricsData = async () => {
     setMetricsLoading(true);
     try {
       const metrics = await companyService.getMetrics();
-      setMetrics(metrics);
+      await setMetrics(metrics);
     } catch (error) {
       console.log(error.message);
     } finally {
@@ -177,14 +182,28 @@ const MetricsList = React.memo(({ handleOpen }) => {
   };
 
   useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    const updateItemsPerPage = () => {
+      console.log(window.innerHeight);
+      if (window.innerHeight >= 1028) {
+        setNumberPerPage(3);
+      } else if (window.innerHeight >= 750) {
+        setNumberPerPage(2);
+      } else {
+        setNumberPerPage(1);
+      }
+    };
 
-    fetchMetricsData();
+    updateItemsPerPage();
+
+    window.addEventListener("resize", updateItemsPerPage);
 
     return () => {
-      controller.abort();
+      window.removeEventListener("resize", updateItemsPerPage);
     };
+  }, []);
+
+  useEffect(() => {
+    fetchMetricsData();
   }, []);
 
   if (metricsLoading) {
@@ -195,60 +214,135 @@ const MetricsList = React.memo(({ handleOpen }) => {
     );
   }
 
+  const metricItems = [
+    {
+      title: "Trending Now",
+      tableHeader: "Current Number of Investors",
+      icon: "trending_now",
+      description:
+        "A stock that is trending right means that many kids in Kidzania are starting to invest in it right now.",
+      data: metrics.trending_now,
+    },
+    {
+      title: "Most Traded",
+      tableHeader: "Number of Trades",
+      icon: "most_traded",
+      description:
+        "A stock that is most traded means that it has received the highest number of trades out of all other stocks.",
+      data: metrics.most_traded,
+    },
+    {
+      title: "Highest Return",
+      tableHeader: "Return %",
+      icon: "highest_return",
+      description:
+        "A stock with the highest return means that it made the biggest profit for investors compared to all other stocks.",
+      data: metrics.highest_return,
+    },
+    {
+      title: "Most Visited",
+      tableHeader: "Visitors",
+      icon: "most_visited",
+      description:
+        "A stock that is most visited means that it has received the highest number of visitors to its establishment in Kidzania.",
+      data: metrics.most_visited,
+    },
+  ];
+
   return (
-    <div>
-      <Stack spacing={2} className="overflow-y-auto max-h-[60vh]">
-        <MetricsItem
-          title="Trending Now"
-          tableHeader="Current Number of Investors"
-          icon="trending_now"
-          description="A stock that is trending right means that many kids in Kidzania are starting to invest in it right now."
-          name={metrics.trending_now[0]?.name}
-          acronym={metrics.trending_now[0]?.acronym}
-          logo={metrics.trending_now[0]?.logo}
-          price={metrics.trending_now[0]?.current_price}
-          current_return={metrics.trending_now[0]?.current_return}
-          companyList={metrics.trending_now}
-          openCompany={handleOpen}
-        />
-        <MetricsItem
-          title="Most Traded"
-          tableHeader="Number of Trades"
-          icon="most_traded"
-          description="A stock that is most traded means that it has received the highest number of trades out all other stocks."
-          name={metrics.most_traded[0]?.name}
-          acronym={metrics.most_traded[0]?.acronym}
-          logo={metrics.most_traded[0]?.logo}
-          number={metrics.most_traded[0]?.number_of_trades}
-          companyList={metrics.most_traded}
-          openCompany={handleOpen}
-        />
-        <MetricsItem
-          title="Highest Return"
-          tableHeader="Return %"
-          icon="highest_return"
-          description="A stock with the highest return means that it made made the biggest profit for investors compared to all other stocks."
-          name={metrics.highest_return[0]?.name}
-          acronym={metrics.highest_return[0]?.acronym}
-          logo={metrics.highest_return[0]?.logo}
-          price={metrics.highest_return[0]?.current_price}
-          current_return={metrics.highest_return[0]?.current_return}
-          companyList={metrics.highest_return}
-          openCompany={handleOpen}
-        />
-        <MetricsItem
-          title="Most Visited"
-          tableHeader="Visitors"
-          icon="most_visited"
-          description="A stock that is most visited means that it has received has the highest number of visitors to its establishment in Kidzania."
-          name={metrics.most_visited[0]?.name}
-          acronym={metrics.most_visited[0]?.acronym}
-          logo={metrics.most_visited[0]?.logo}
-          number={metrics.most_traded[0]?.current_visitors}
-          companyList={metrics.most_visited}
-          openCompany={handleOpen}
-        />
-      </Stack>
+    <div className="relative">
+      <Swiper
+        slidesPerView={"auto"}
+        spaceBetween={16}
+        pagination={{
+          clickable: true,
+          el: ".swiper-pagination",
+        }}
+        navigation={{
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        }}
+        modules={[Pagination, Navigation]}
+        className="mySwiper"
+      >
+        {metricItems
+          .reduce((acc, item, index) => {
+            // Only push an array when the current index is divisible by `numberPerPage`
+            if (index % numberPerPage === 0) {
+              // Slice the `metricItems` array from the current index to `numberPerPage` items ahead
+              acc.push(metricItems.slice(index, index + numberPerPage));
+            }
+            return acc;
+          }, [])
+          .map((item, index) => (
+            <SwiperSlide key={index} className="flex flex-col gap-4">
+              {item[0] && (
+                <MetricsItem
+                  title={item[0].title}
+                  tableHeader={item[0].tableHeader}
+                  icon={item[0].icon}
+                  description={item[0].description}
+                  name={item[0].data[0]?.name}
+                  acronym={item[0].data[0]?.acronym}
+                  logo={item[0].data[0]?.logo}
+                  price={item[0].data[0]?.current_price}
+                  current_return={item[0].data[0]?.current_return}
+                  number={
+                    item[0].data[0]?.number_of_trades ||
+                    item[0].data[0]?.current_visitors
+                  }
+                  companyList={item[0].data}
+                  openCompany={handleOpen}
+                />
+              )}
+              {item[1] && (
+                <MetricsItem
+                  title={item[1].title}
+                  tableHeader={item[1].tableHeader}
+                  icon={item[1].icon}
+                  description={item[1].description}
+                  name={item[1].data[0]?.name}
+                  acronym={item[1].data[0]?.acronym}
+                  logo={item[1].data[0]?.logo}
+                  price={item[1].data[0]?.current_price}
+                  current_return={item[1].data[0]?.current_return}
+                  number={
+                    item[1].data[0]?.number_of_trades ||
+                    item[1].data[0]?.current_visitors
+                  }
+                  companyList={item[1].data}
+                  openCompany={handleOpen}
+                />
+              )}
+              {item[2] && (
+                <MetricsItem
+                  title={item[2].title}
+                  tableHeader={item[2].tableHeader}
+                  icon={item[2].icon}
+                  description={item[2].description}
+                  name={item[2].data[0]?.name}
+                  acronym={item[1].data[0]?.acronym}
+                  logo={item[2].data[0]?.logo}
+                  price={item[2].data[0]?.current_price}
+                  current_return={item[2].data[0]?.current_return}
+                  number={
+                    item[2].data[0]?.number_of_trades ||
+                    item[2].data[0]?.current_visitors
+                  }
+                  companyList={item[2].data}
+                  openCompany={handleOpen}
+                />
+              )}
+            </SwiperSlide>
+          ))}
+        <div className="flex w-full justify-center items-center mt-8">
+          <div className="flex flex-row justify-center items-center w-fit">
+            <div className="swiper-button-prev relative p-5 pb-4"></div>
+            <div className="swiper-pagination relative"></div>
+            <div className="swiper-button-next relative p-5 pb-4"></div>
+          </div>
+        </div>
+      </Swiper>
     </div>
   );
 });
