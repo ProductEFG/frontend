@@ -38,7 +38,7 @@ const MarketOverview = ({ balance }) => {
     try {
       setCompaniesLoading(true);
 
-      const companies = await companyService.getCompanies(balance);
+      const companies = await companyService.getCompanies(10000000);
       setAvailableCompanies(companies);
       setFilteredcompanies(companies);
 
