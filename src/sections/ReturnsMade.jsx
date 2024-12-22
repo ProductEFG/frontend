@@ -170,7 +170,14 @@ const ReturnsMade = ({ portfolioHandle }) => {
 
   const handleChange = (event, newValue) => {
     setVisitors(newValue);
-    setPredictedProfit(newValue / 100);
+    const difference = newValue - visitors; // Check movement direction
+    const adjustment = Math.abs(difference) / 100; // Calculate adjustment value
+    const updatedValue =
+      newValue > visitors
+        ? predictedProfit + adjustment // Increase if slider moves right
+        : predictedProfit - adjustment; // Decrease if slider moves left
+
+    setPredictedProfit(updatedValue); // Update the state
   };
 
   const generateData = async (companyId) => {
@@ -257,9 +264,9 @@ const ReturnsMade = ({ portfolioHandle }) => {
                 </div>
                 <div>
                   <Price
-                    price={
+                    price={(
                       companyBought.invested_amount + companyBought.profit_made
-                    }
+                    ).toFixed(2)}
                     styles={"absolute -right-4 top-0 w-4"}
                     textStyles={"text-[24px]"}
                   />
@@ -353,7 +360,7 @@ const ReturnsMade = ({ portfolioHandle }) => {
               </p>
               <div className="relative w-fit mx-auto mb-4">
                 <Price
-                  price={predictedProfit}
+                  price={predictedProfit.toFixed(2)}
                   styles={"absolute -right-5 top-0.5 w-5"}
                   textStyles={"text-[36px]"}
                   font={"medium"}

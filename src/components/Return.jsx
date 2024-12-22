@@ -14,7 +14,7 @@ const Return = ({ type, number }) => {
         alt="type"
         className="w-4 big:w-5"
       />
-      {type === "positive" ? "+" : "-"}
+      {type === "positive" ? "+" : ""}
       {number}%
     </div>
   );
