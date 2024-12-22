@@ -7,7 +7,7 @@ import { userStocksService } from "../services/userStocks.service.js";
 import { userService } from "../services/user.service.js";
 import UserEntity from "../entities/userEntity.js";
 
-const SellStockWindow = ({ company }) => {
+const SellStockWindow = ({ company, withdrawHandle }) => {
   const { user, setUser, backendUrl } = useAuth();
 
   const [quantity, setQuantity] = useState(1);
@@ -43,6 +43,7 @@ const SellStockWindow = ({ company }) => {
       setSuccess("Stocks have been sold successfully");
       setError("");
       company.quantity -= quantity;
+      withdrawHandle();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -59,11 +60,7 @@ const SellStockWindow = ({ company }) => {
         <h3 className="flex flex-row gap-2 items-center justify-start text-[24px] font-semibold">
           {" "}
           Sell {company.acronym}{" "}
-          <img
-            src={`${backendUrl}/images/logos/${company.logo}`}
-            width={30}
-            height={30}
-          />
+          <img src={`${company.logo}`} width={30} height={30} />
         </h3>
         <p className="flex flex-row items-center text-xs">
           <img src="/images/stock_arrow.svg" alt="Stock" /> 1 ={" "}

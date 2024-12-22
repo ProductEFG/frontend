@@ -2,10 +2,7 @@ import React, { memo, useEffect, useState, useRef } from "react";
 import Loading from "../../components/Loading";
 import Grid2 from "@mui/material/Grid2";
 import { userService } from "../../services/user.service";
-import { Stack } from "@mui/material";
 import UserEntity from "../../entities/userEntity";
-import Price from "../Price";
-import Button from "../Button";
 import UserCard from "./UserCard";
 
 const UsersList = memo(({ handleOpen }) => {
@@ -69,8 +66,8 @@ const UsersList = memo(({ handleOpen }) => {
           <Loading otherClasses={"w-7 h-7"} />
         </div>
       ) : (
-        <div className="overflow-auto max-h-[70vh]">
-          <Grid2 container rowSpacing={2} columnSpacing={2}>
+        <div className="overflow-auto max-h-[calc(100vh-235px)]">
+          <Grid2 container rowSpacing={1} columnSpacing={1}>
             {users.length > 0 &&
               users.map((user, i) => {
                 return i === users.length - 1 &&

@@ -4,10 +4,9 @@ import Price from "./Price";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import Button from "../components/Button.jsx";
 import { userStocksService } from "../services/userStocks.service.js";
-import { userService } from "../services/user.service.js";
 import UserEntity from "../entities/userEntity.js";
 
-const BuyStockWindow = ({ company }) => {
+const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
   const { user, setUser, backendUrl } = useAuth();
 
   const [quantity, setQuantity] = useState(1);
@@ -47,8 +46,24 @@ const BuyStockWindow = ({ company }) => {
       setUser(new UserEntity(updatedUser));
       sessionStorage.setItem("token", JSON.stringify(updatedUser));
       setSuccess("Stocks have been bought successfully");
+
+      console.log(company.current_return);
+
+      const companyBought = {
+        companyId: company._id,
+        companyLogo: company.logo,
+        companyName: company.name,
+        companyReturn: company.current_return,
+        invested_amount: quantity * company.current_price,
+        profit_made: quantity * company.current_change,
+        visitors: company.current_visitors,
+      };
+
+      sessionStorage.setItem("companyBought", JSON.stringify(companyBought));
+      setCompanyBought(companyBought);
       fetchUserStocks();
       setError("");
+      ReturnsMadeHandle();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -100,11 +115,7 @@ const BuyStockWindow = ({ company }) => {
         <h3 className="flex flex-row gap-2 items-center justify-start text-[24px] font-semibold">
           {" "}
           Buy {company.acronym}{" "}
-          <img
-            src={`${backendUrl}/images/logos/${company.logo}`}
-            width={30}
-            height={30}
-          />
+          <img src={`${company.logo}`} width={30} height={30} />
         </h3>
         <p className="flex flex-row items-center text-xs">
           <img src="/images/stock_arrow.svg" alt="Stock" /> 1 ={" "}

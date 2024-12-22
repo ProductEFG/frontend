@@ -30,6 +30,8 @@ const AdminCompanyDetailsModal = memo(
     const [preview, setPreview] = useState(null);
     const [editing, setEditing] = useState(false);
     const [deleting, setDeleting] = useState(false);
+    const [operationLoading, setOperationLoading] = useState(false);
+    const [error, setError] = useState("");
 
     // Animated spring for monthlyVisitors
     const { visitorsCount } = useSpring({
@@ -44,7 +46,8 @@ const AdminCompanyDetailsModal = memo(
         setLoading(true);
 
         const history = await stocksHistoryService.getCompanyHistory(
-          company._id
+          company._id,
+          365
         );
         setCompanyHistory(history);
 
@@ -105,6 +108,7 @@ const AdminCompanyDetailsModal = memo(
     };
 
     const handleEdit = async () => {
+      setOperationLoading(true);
       const formData = new FormData();
 
       formData.append("companyId", company._id);
@@ -127,10 +131,16 @@ const AdminCompanyDetailsModal = memo(
         handleClose();
       } catch (error) {
         console.error("Error updating company:", error.response?.data);
+        setError(
+          "Failed to Update company, please contact the admins for support"
+        );
+      } finally {
+        setOperationLoading(false);
       }
     };
 
     const handleDelete = async () => {
+      setOperationLoading(true);
       try {
         await companyService.deleteCompany(company._id);
 
@@ -138,6 +148,11 @@ const AdminCompanyDetailsModal = memo(
         handleClose();
       } catch (error) {
         console.error("Error deleting company:", error.response?.data);
+        setError(
+          "Failed to Delete company, please contact the admins for support"
+        );
+      } finally {
+        setOperationLoading(false);
       }
     };
 
@@ -196,61 +211,68 @@ const AdminCompanyDetailsModal = memo(
             position: "absolute",
             top: "50%",
             left: "50%",
+            width: "80%",
             transform: "translate(-50%, -50%)",
-            width: 1200,
             bgcolor: "white",
             borderRadius: "10px",
             boxShadow: 24,
             p: 4,
           }}
         >
-          <div className="flex flex-row mb-10">
+          <div className="flex flex-row mb-6">
             <div className="flex flex-col gap-2">
               <div className="flex flex-row gap-4 justify-center items-center">
-                <img
-                  src={`${backendUrl}/images/logos/${company.logo}`}
-                  width={53}
-                  height={53}
-                />
-                <h3 className="font-semibold text-[32px]"> {company.name}</h3>
+                <img src={`${company.logo}`} width={40} height={40} />
+                <h3 className="font-semibold text-2xl"> {company.name}</h3>
               </div>
             </div>
             <div
-              className="flex flex-row items-center text-2xl gap-2 ml-auto"
+              className="flex flex-row items-center text-xl gap-2 ml-auto"
               onClick={handleClose}
             >
-              Close <img src="/images/close.svg" alt="close" />
+              Close <img src="/images/close.svg" alt="close" className="w-6" />
             </div>
           </div>
-          <div className="flex flex-row justify-end items-center w-full gap-5 pb-4 tracking-wider">
-            <button
-              className="w-[173px] h-[40px] bg-[#FEECEE] p-2 rounded-xl text-[#EB3D4D] font-semibold text-sm flex flex-row gap-2 items-center justify-center"
-              onClick={() => {
-                setEditing(true);
-                setDeleting(true);
-              }}
-            >
-              <img src="/images/admin/delete_icon.svg" />
-              Delete Company
-            </button>
-            {editing ? (
+          {operationLoading ? (
+            <div className="flex justify-end items-center pb-4 pr-[12%]">
+              <Loading otherClasses={"w-5 h-5"} />
+            </div>
+          ) : (
+            <div className="flex flex-row justify-end items-center w-full gap-5 pb-4 tracking-wider">
+              {error.length > 0 && (
+                <p className="text-red-500 font-semibold p-2 text-xs">
+                  {error}
+                </p>
+              )}
               <button
-                className="w-[141px] h-[40px] bg-[#31CFCB] p-2 rounded-xl text-white text-sm flex flex-row gap-2 items-center justify-center"
-                onClick={handleEdit}
+                className="bg-[#FEECEE] p-2 pr-4 pl-4 rounded-xl text-[#EB3D4D] font-semibold text-xs flex flex-row gap-2 items-center justify-center"
+                onClick={() => {
+                  setEditing(true);
+                  setDeleting(true);
+                }}
               >
-                <img src="/images/admin/editing_icon.svg" />
-                Save Details
+                <img src="/images/admin/delete_icon.svg" />
+                Delete Company
               </button>
-            ) : (
-              <button
-                className="w-[207px] h-[40px] bg-[#F0F1F3] p-2 rounded-xl text-[#1D1F2C] font-semibold text-sm flex flex-row gap-2 items-center justify-center"
-                onClick={() => setEditing(true)}
-              >
-                <img src="/images/admin/edit_icon.svg" />
-                Edit Company Details
-              </button>
-            )}
-          </div>
+              {editing ? (
+                <button
+                  className="bg-[#31CFCB] p-2 pr-4 pl-4 rounded-xl text-white text-xs flex flex-row gap-2 items-center justify-center"
+                  onClick={handleEdit}
+                >
+                  <img src="/images/admin/editing_icon.svg" />
+                  Save Details
+                </button>
+              ) : (
+                <button
+                  className="bg-[#F0F1F3] p-2 pr-4 pl-4 rounded-xl text-[#1D1F2C] font-semibold text-xs flex flex-row gap-2 items-center justify-center"
+                  onClick={() => setEditing(true)}
+                >
+                  <img src="/images/admin/edit_icon.svg" />
+                  Edit Company Details
+                </button>
+              )}
+            </div>
+          )}
           {/* General Company Info  VS Editing Mode*/}
           {editing ? (
             <Stack direction={"row"} spacing={5}>
@@ -279,7 +301,7 @@ const AdminCompanyDetailsModal = memo(
                       }}
                     />
                   ) : (
-                    <img src={`${backendUrl}/images/logos/${company.logo}`} />
+                    <img src={`${company.logo}`} />
                   )}
                   <VisuallyHiddenInput
                     type="file"
@@ -291,23 +313,26 @@ const AdminCompanyDetailsModal = memo(
                     className="absolute right-0 bottom-0"
                   />
                 </Button>
-                <div className="pt-8 flex flex-row items-center gap-3">
+                <div className="pt-8 flex flex-row items-center gap-3 w-full">
                   <img src="/images/admin/image_upload_flag.svg" />
-                  <p className="text-white-200 text-sm w-[300px] tracking-wider leading-6">
+                  <p className="text-white-200 text-xs tracking-wider leading-6">
                     *Note: If you want to update the number of establishment
                     visitors of this company, please do it from the companies
                     page by clicking the “Upload Visitors Sheet” button.
                   </p>
                 </div>
               </div>
-              <Stack spacing={2} className="flex justify-center items-center">
+              <Stack
+                spacing={2}
+                className="flex justify-center items-center w-[50%]"
+              >
                 {/* Company Name */}
                 <input
                   name="name"
                   value={companyInfo.name}
                   onChange={handleValueChange}
                   placeholder="Enter company name"
-                  className="w-[583px] h-[62px] p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
+                  className="w-full p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
                 />
                 {/* Company acronym */}
                 <input
@@ -315,7 +340,7 @@ const AdminCompanyDetailsModal = memo(
                   value={companyInfo.acronym}
                   onChange={handleValueChange}
                   placeholder="Enter company acronym"
-                  className="w-[583px] h-[62px] p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
+                  className="w-full p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
                 />
                 {/* Company establishment type */}
                 <input
@@ -323,7 +348,7 @@ const AdminCompanyDetailsModal = memo(
                   value={companyInfo.establishment_type}
                   onChange={handleValueChange}
                   placeholder="Enter establishment type"
-                  className="w-[583px] h-[62px] p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
+                  className="w-full p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
                 />
 
                 {/* Company Description */}
@@ -333,24 +358,24 @@ const AdminCompanyDetailsModal = memo(
                   onChange={handleValueChange}
                   placeholder="Enter company description"
                   rows="6"
-                  className="w-[583px] h-[200px] p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
+                  className="w-full h-full p-5 border bg-white-100 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple"
                 />
-                {deleting && (
-                  <div className="w-[583px] flex flex-col gap-2">
+                {deleting && !operationLoading && (
+                  <div className="w-full flex flex-col gap-5">
                     <p className="text-sm font-semibold">
                       You are about to delete {company.name} as company in the
                       Kidzania trading app. Are you sure you want to do this?{" "}
                     </p>
-                    <div className="flex justify-end items-center gap-5 p-5">
+                    <div className="flex justify-end items-center gap-5">
                       <button
-                        className="w-[78px] h-[40px] bg-[#31CFCB] rounded-xl text-white text-sm tracking-wider flex flex-row justify-center items-center gap-1"
+                        className="bg-[#31CFCB] rounded-xl text-white text-sm tracking-wider flex flex-row justify-center items-center gap-1 p-2 pr-4 pl-4"
                         onClick={handleDelete}
                       >
                         <img src="/images/admin/yes.svg" alt="Yes" />
                         Yes
                       </button>
                       <button
-                        className="w-[78px] h-[40px] bg-[#FEECEE] rounded-xl text-[#EB3D4D] text-sm tracking-wider flex flex-row justify-center items-center gap-1"
+                        className="bg-[#FEECEE] rounded-xl text-[#EB3D4D] text-sm tracking-wider flex flex-row justify-center items-center gap-1 p-2 pr-4 pl-4"
                         onClick={() => setDeleting(false)}
                       >
                         <img src="/images/admin/close_square.svg" alt="Yes" />
@@ -362,16 +387,19 @@ const AdminCompanyDetailsModal = memo(
               </Stack>
             </Stack>
           ) : (
-            <Stack direction={"row"} spacing={5}>
-              <div className="relative border border-white-200 rounded-2xl bg-white w-[790px] h-[535px] p-4">
+            <Stack direction={"row"} spacing={2}>
+              <div className="relative border border-white-200 rounded-2xl bg-white p-4 w-[70%]">
                 <DataChart history={companyHistory} />
               </div>
-              <Stack spacing={5} className="flex justify-center items-center">
-                <div className="relative border border-white-200 rounded-2xl bg-white w-[330px] h-[240px] p-3">
+              <Stack
+                spacing={2}
+                className="flex justify-center items-center w-[30%]"
+              >
+                <div className="relative border border-white-200 rounded-2xl bg-white w-[280px] h-[240px] p-3 overflow-hidden overflow-y-auto text-sm">
                   {company && company.description}
                 </div>
 
-                <div className="relative border border-white-200 rounded-2xl bg-white w-[330px] h-[240px] p-3">
+                <div className="relative border border-white-200 rounded-2xl bg-white p-8">
                   <Stack
                     spacing={2}
                     textAlign={"center"}
@@ -382,15 +410,16 @@ const AdminCompanyDetailsModal = memo(
                     <img
                       src="/images/monthly_visitors.svg"
                       alt="Monthly Visitors Icon"
+                      className="w-20"
                     />
-                    <p className="font-semibold text-5xl">
+                    <p className="font-semibold text-4xl">
                       <animated.span>
                         {visitorsCount.to((val) =>
                           Math.floor(val).toLocaleString()
                         )}
                       </animated.span>
                     </p>
-                    <p className="text-2xl text-white-200">
+                    <p className="text-xl text-white-200">
                       Total Monthly Visitors
                     </p>
                   </Stack>

@@ -28,3 +28,11 @@ export const femaleAvatars = [
   "female_avatar-11",
   "female_avatar-12",
 ];
+
+export const tabs = [
+  "Market Overview",
+  "Returns Made",
+  "My Portfolio",
+  "Withdraw",
+  "Leaderboard",
+];

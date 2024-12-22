@@ -87,7 +87,7 @@ const DataTable = ({ data, thirdColumn, onViewStock }) => {
                   }}
                 >
                   <img
-                    src={`${backendUrl}/images/logos/${company.logo}`}
+                    src={`${company.logo}`}
                     className="w-10 h-10"
                     alt={`${company.name} logo`}
                   />

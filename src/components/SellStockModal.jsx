@@ -34,12 +34,7 @@ const CompanyCard = memo(({ stock, handleClick, isSelling, selected }) => {
               textOverflow: "ellipsis",
             }}
           >
-            <img
-              src={`${backendUrl}/images/logos/${stock.logo}`}
-              alt="Logo"
-              width="35px"
-              height="35px"
-            />
+            <img src={`${stock.logo}`} alt="Logo" width="35px" height="35px" />
             <span
               style={{ textOverflow: "ellipsis", overflow: "hidden" }}
               className="text-sm"
@@ -101,94 +96,99 @@ const CompanyCard = memo(({ stock, handleClick, isSelling, selected }) => {
   );
 });
 
-const SellStockModal = memo(({ open, handleClose, userStocksDetails }) => {
-  const [sellingCompany, setSellingCompany] = useState(null);
+const SellStockModal = memo(
+  ({ open, handleClose, userStocksDetails, withdrawHandle }) => {
+    const [sellingCompany, setSellingCompany] = useState(null);
 
-  const sellWindowTransition = useSpring({
-    transform: sellingCompany ? "translateX(0%)" : "translateX(30%)",
-    opacity: sellingCompany ? 1 : 0,
-    config: { tension: 220, friction: 20 },
-  });
+    const sellWindowTransition = useSpring({
+      transform: sellingCompany ? "translateX(0%)" : "translateX(30%)",
+      opacity: sellingCompany ? 1 : 0,
+      config: { tension: 220, friction: 20 },
+    });
 
-  return (
-    <Modal
-      keepMounted
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="keep-mounted-modal-title"
-      aria-describedby="keep-mounted-modal-description"
-    >
-      <Box
-        sx={{
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          width: 965,
-          height: 680,
-          bgcolor: "white",
-          borderRadius: "10px",
-          boxShadow: 24,
-          p: 4,
-        }}
+    return (
+      <Modal
+        keepMounted
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="keep-mounted-modal-title"
+        aria-describedby="keep-mounted-modal-description"
       >
-        <div className="flex flex-row mb-10">
-          <div className="flex flex-col gap-2">
-            <h3 className="font-semibold text-[32px]">Stocks you Own</h3>
-          </div>
-          <div
-            className="flex flex-row items-center text-2xl gap-2 ml-auto"
-            onClick={handleClose}
-          >
-            Close <img src="/images/close.svg" alt="close" />
-          </div>
-        </div>
-
-        <Stack
-          spacing={2}
-          direction={"row"}
-          className="flex justify-between p-0 m-0 h-full"
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: 965,
+            height: 680,
+            bgcolor: "white",
+            borderRadius: "10px",
+            boxShadow: 24,
+            p: 4,
+          }}
         >
-          <Grid2
-            container
-            rowSpacing={2}
-            columnSpacing={2}
-            className="max-h-[70vh] w-full pr-5 overflow-auto"
-          >
-            {userStocksDetails.length > 0 ? (
-              userStocksDetails.map((stock) => (
-                <CompanyCard
-                  key={stock.id}
-                  stock={stock}
-                  handleClick={() => setSellingCompany(stock)}
-                  isSelling={sellingCompany ? true : false}
-                  selected={
-                    sellingCompany && sellingCompany.id === stock.id
-                      ? true
-                      : false
-                  }
-                />
-              ))
-            ) : (
-              <div className="flex justify-center items-center h-[24rem] w-full">
-                <p className="text-xl">No companies available.</p>
-              </div>
-            )}
-          </Grid2>
-          {sellingCompany && (
-            <animated.div
-              className="w-[328px] h-[520px]"
-              style={sellWindowTransition}
+          <div className="flex flex-row mb-10">
+            <div className="flex flex-col gap-2">
+              <h3 className="font-semibold text-[32px]">Stocks you Own</h3>
+            </div>
+            <div
+              className="flex flex-row items-center text-2xl gap-2 ml-auto"
+              onClick={handleClose}
             >
-              <div className="company-card-2 relative border-[2px] border-[#31CFCB] bg-white w-[328px] h-[520px] p-4">
-                <SellStockWindow company={sellingCompany} />
-              </div>
-            </animated.div>
-          )}
-        </Stack>
-      </Box>
-    </Modal>
-  );
-});
+              Close <img src="/images/close.svg" alt="close" />
+            </div>
+          </div>
+
+          <Stack
+            spacing={2}
+            direction={"row"}
+            className="flex justify-between p-0 m-0 h-full"
+          >
+            <Grid2
+              container
+              rowSpacing={2}
+              columnSpacing={2}
+              className="max-h-[70vh] w-full pr-5 overflow-auto"
+            >
+              {userStocksDetails.length > 0 ? (
+                userStocksDetails.map((stock) => (
+                  <CompanyCard
+                    key={stock.id}
+                    stock={stock}
+                    handleClick={() => setSellingCompany(stock)}
+                    isSelling={sellingCompany ? true : false}
+                    selected={
+                      sellingCompany && sellingCompany.id === stock.id
+                        ? true
+                        : false
+                    }
+                  />
+                ))
+              ) : (
+                <div className="flex justify-center items-center h-[24rem] w-full">
+                  <p className="text-xl">No companies available.</p>
+                </div>
+              )}
+            </Grid2>
+            {sellingCompany && (
+              <animated.div
+                className="w-[328px] h-[520px]"
+                style={sellWindowTransition}
+              >
+                <div className="company-card-2 relative border-[2px] border-[#31CFCB] bg-white w-[328px] h-[520px] p-4">
+                  <SellStockWindow
+                    company={sellingCompany}
+                    withdrawHandle={withdrawHandle}
+                  />
+                </div>
+              </animated.div>
+            )}
+          </Stack>
+        </Box>
+      </Modal>
+    );
+  }
+);
 
 export default SellStockModal;

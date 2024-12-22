@@ -1,8 +1,10 @@
 import apiClient from "../apis/apiClient";
 
-const getCompanyHistory = async (companyId) => {
+const getCompanyHistory = async (companyId, numberOfDays) => {
   try {
-    const response = await apiClient.get(`stocksHistory/${companyId}`);
+    const response = await apiClient.get(
+      `stocksHistory/${companyId}?numberOfDays=${numberOfDays}`
+    );
 
     const history = response.data;
 

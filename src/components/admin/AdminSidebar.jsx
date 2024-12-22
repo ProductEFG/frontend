@@ -34,12 +34,12 @@ const AdminSidebar = ({ onPageChange }) => {
   };
 
   return (
-    <div className="w-[264px] h-[100vh] bg-white">
+    <div className="w-fit h-[100vh] bg-white">
       <ul className="flex flex-col p-3">
         {NAV_ITEMS.map((item) => (
           <li
             key={item.id}
-            className={`flex items-center gap-4 p-4 mt-3 cursor-pointer rounded-xl ${
+            className={`flex items-center gap-4 p-4 pr-16 mt-3 cursor-pointer rounded-xl ${
               activeItem === item.id
                 ? "bg-purple text-white"
                 : "hover:bg-gray-200"
@@ -49,9 +49,9 @@ const AdminSidebar = ({ onPageChange }) => {
             <img
               src={activeItem === item.id ? item.selectedicon : item.icon}
               alt={item.label}
-              className="w-6 h-6"
+              className="w-5"
             />
-            <span>{item.label}</span>
+            <span className="text-sm">{item.label}</span>
           </li>
         ))}
       </ul>

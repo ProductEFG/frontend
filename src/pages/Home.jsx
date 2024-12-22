@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import Navbar from "../components/Navbar";
@@ -12,15 +12,33 @@ import Loading from "../components/Loading";
 import MyPortfolio from "../sections/MyPortfolio";
 import LeaderboardsTable from "../sections/LeaderboardsTable";
 import WithdrawSection from "../sections/WithdrawSection";
+import ReturnsMade from "../sections/ReturnsMade";
+import { tabs } from "../data/constants";
 
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const [view, setView] = React.useState("Market Overview");
+  const [view, setView] = useState("Market Overview");
+  const [companyBought, setCompanyBought] = useState({
+    companyId: "",
+    companyLogo: "",
+    companyName: "",
+    companyReturn: 0,
+    invested_amount: 0,
+    profit_made: 0,
+  });
+  const [enabledTabs, setEnabledTabs] = useState(() => {
+    const savedState = sessionStorage.getItem("enabledTabs");
+    return savedState ? JSON.parse(savedState) : { count: 0 };
+  });
 
-  const handleChange = (event, newView) => {
+  const handleChange = (event, newView, index) => {
     setView(newView);
+    const newEnabledTabs = enabledTabs;
+    newEnabledTabs[index] = false;
+    setEnabledTabs(newEnabledTabs);
+    sessionStorage.setItem("enabledTabs", JSON.stringify(newEnabledTabs));
   };
 
   useEffect(() => {
@@ -58,12 +76,7 @@ const Home = () => {
                 },
               }}
             >
-              {[
-                "Market Overview",
-                "My Portfolio",
-                "Withdraw",
-                "Leaderboard",
-              ].map((label) => (
+              {tabs.map((label, index) => (
                 <Tab
                   key={label}
                   label={label}
@@ -72,25 +85,41 @@ const Home = () => {
                     fontSize: "20px",
                     color: "#9AA0A6",
                     fontWeight: "normal",
-                    textTransform: "none", // Prevents automatic capitalization
+                    textTransform: "none",
                     transition: "all 0.3s ease",
+                    // cursor: enabledTabs[index] ? "not-allowed" : "pointer",
+                    cursor: "pointer",
+                    // opacity: enabledTabs[index] ? 0.5 : 1,
+                    opacity: 1,
                     "&.Mui-selected": {
                       backgroundColor: "#6143F0",
                       color: "white",
                     },
                   }}
+                  // disabled={enabledTabs[index]}
                 />
               ))}
             </TabList>
           </Box>
           <TabPanel value="Market Overview" sx={{ padding: 0 }}>
-            <MarketOverview balance={user.wallet_balance} />
+            <MarketOverview
+              setCompanyBought={setCompanyBought}
+              ReturnsMadeHandle={(e) => handleChange(e, "Returns Made", 1)}
+            />
+          </TabPanel>
+          <TabPanel value="Returns Made" sx={{ padding: 0, paddingTop: 2 }}>
+            <ReturnsMade
+              companyBought={companyBought}
+              portfolioHandle={(e) => handleChange(e, "My Portfolio", 2)}
+            />
           </TabPanel>
           <TabPanel
             value="My Portfolio"
             sx={{ padding: 0, paddingTop: 2, height: "75vh" }}
           >
-            <MyPortfolio withdrawHandle={(e) => handleChange(e, "Withdraw")} />
+            <MyPortfolio
+              withdrawHandle={(e) => handleChange(e, "Withdraw", 3)}
+            />
           </TabPanel>
           <TabPanel value="Withdraw" sx={{ padding: 0, paddingTop: 4 }}>
             <WithdrawSection navigationHandle={handleChange} />

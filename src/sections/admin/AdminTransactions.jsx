@@ -143,9 +143,9 @@ const AdminTransactions = () => {
 
   return (
     <div>
-      <div className="w-fit gap-x-2 bg-white rounded-full flex flex-row justify-between items-center mb-5">
+      <div className="w-fit gap-x-2 bg-white rounded-full flex flex-row justify-between items-center mb-2">
         <button
-          className={`pr-3 pl-3 p-2 rounded-full ${
+          className={`text-xs pr-3 pl-3 p-2 rounded-full ${
             selectedType === "Buy" ? " bg-purple text-white" : ""
           } tracking-wider`}
           onClick={() => setSelectedType("Buy")}
@@ -153,7 +153,7 @@ const AdminTransactions = () => {
           Buy Transactions
         </button>
         <button
-          className={`pr-3 pl-3 p-2 rounded-full ${
+          className={`text-xs pr-3 pl-3 p-2 rounded-full ${
             selectedType === "Sell" ? " bg-purple text-white" : ""
           } tracking-wider`}
           onClick={() => setSelectedType("Sell")}
@@ -161,7 +161,7 @@ const AdminTransactions = () => {
           Sell Transactions
         </button>
         <button
-          className={`pr-3 pl-3 p-2 rounded-full ${
+          className={`text-xs pr-3 pl-3 p-2 rounded-full ${
             selectedType === "Withdraw" ? " bg-purple text-white" : ""
           } tracking-wider`}
           onClick={() => setSelectedType("Withdraw")}
@@ -175,15 +175,15 @@ const AdminTransactions = () => {
         </div>
       ) : (
         <div className="flex flex-col items-center">
-          <div className="w-full overflow-x-auto rounded-xl shadow-lg">
+          <div className="w-full overflow-x-auto rounded-xl shadow-lg h-[585px] overflow-hidden">
             <table
               id="datatable"
               className="table-auto border-collapse w-full text-left text-gray-700"
             >
-              <thead className="bg-gray-100 border-b">
+              <thead className="bg-gray-100 border-b text-xs">
                 <tr>
-                  <th className="p-3 font-medium w-[150px]">Transaction ID</th>
-                  <th className="p-3 font-medium w-[150px]">User ID</th>
+                  <th className="p-3 font-medium w-[130px]">Transaction ID</th>
+                  <th className="p-3 font-medium w-[120px]">User ID</th>
                   <th className="p-3 font-medium w-[150px]">
                     <div className="flex flex-row gap-2">
                       Date & Time{" "}
@@ -205,7 +205,11 @@ const AdminTransactions = () => {
                   <th className="p-3 font-medium  w-[150px]">
                     Opening Balance
                   </th>
-                  <th className="p-3 font-medium  w-[150px]">
+                  <th
+                    className={`p-3 font-medium ${
+                      selectedType === "Withdraw" ? "w-[150px]" : "w-[110px]"
+                    }`}
+                  >
                     {selectedType === "Withdraw"
                       ? "Withdrawal amount"
                       : "Quantity"}
@@ -220,31 +224,31 @@ const AdminTransactions = () => {
                   )}
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-xs">
                 {transactions.map((row, index) => (
                   <tr key={index} className={`border-b`}>
-                    <td className={`p-3`}>#{getShortId(row._id)}</td>
-                    <td className={`p-3`}>#{getShortId(row.userId)}</td>
-                    <td className="p-3">
+                    <td className={`p-2`}>#{getShortId(row._id)}</td>
+                    <td className={`p-2`}>#{getShortId(row.userId)}</td>
+                    <td className="p-2">
                       <div className="flex flex-col">
                         <p>{format(row.date, "dd MMM yyyy")}</p>
-                        <p className="text-sm text-white-300">
+                        <p className="text-xs text-white-300">
                           {format(row.date, "hh.mm a")}
                         </p>
                       </div>
                     </td>
-                    <td className="p-3">
+                    <td className="p-2">
                       <Price
                         price={row.opening_balance.toFixed(2)}
                         styles="absolute -right-3 -top-1"
                       />
                     </td>
-                    <td className="p-3">
+                    <td className="p-2">
                       {selectedType === "Withdraw"
                         ? row.withdraw_amount
                         : row.quantity}
                     </td>
-                    <td className="p-3">
+                    <td className="p-2">
                       {" "}
                       <Price
                         price={row.closing_balance.toFixed(2)}
@@ -252,20 +256,20 @@ const AdminTransactions = () => {
                       />
                     </td>
                     {row.companyId && (
-                      <td className="p-3">{row.companyId.acronym}</td>
+                      <td className="p-2">{row.companyId.acronym}</td>
                     )}
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className="flex flex-col sm:flex-row justify-between items-center w-full p-5 pl-3">
-              <div className="text-sm text-gray-600 p-2">
+            <div className="flex flex-col sm:flex-row justify-between items-center w-full p-5 pt-2 pl-1">
+              <div className="text-xs text-gray-600 p-2">
                 Showing {getRange()} of {tableMetaData.totalRecords} entries
               </div>
               <ul className="flex space-x-2 mt-2 sm:mt-0">
                 <li>
                   <button
-                    className={`px-3 py-1 text-sm border shadow-sm rounded ${
+                    className={`px-2 py-1 text-xs border shadow-sm rounded ${
                       currentPage === 1 ? "bg-gray-100" : "bg-white"
                     }`}
                     onClick={prevPage}
@@ -274,7 +278,7 @@ const AdminTransactions = () => {
                     <img
                       src="/images/admin/prev_page.svg"
                       alt="Next Page"
-                      width={18}
+                      width={15}
                     />
                   </button>
                 </li>
@@ -283,7 +287,7 @@ const AdminTransactions = () => {
                   <li key={page}>
                     <button
                       onClick={() => goToPage(page)}
-                      className={`px-3 py-1 text-sm shadow-sm ${
+                      className={`px-2 py-1 text-xs shadow-sm ${
                         page === currentPage
                           ? "bg-purple text-white"
                           : "bg-white border"
@@ -295,7 +299,7 @@ const AdminTransactions = () => {
                 ))}
                 <li>
                   <button
-                    className={`px-3 py-1 text-sm border shadow-sm rounded ${
+                    className={`px-2 py-1 text-sm border shadow-sm rounded ${
                       currentPage === tableMetaData.numberOfPages
                         ? "bg-gray-100"
                         : "bg-white"
@@ -306,7 +310,7 @@ const AdminTransactions = () => {
                     <img
                       src="/images/admin/next_page.svg"
                       alt="Next Page"
-                      width={18}
+                      width={15}
                     />
                   </button>
                 </li>

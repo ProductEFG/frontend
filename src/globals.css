@@ -53,6 +53,11 @@
     transform: translate(10px, 10px); /* Offset shadow */
     z-index: -2; /* Behind the content */
   }
+  .recharts-tooltip-cursor {
+    stroke: #6143f0;
+    stroke-opacity: 0.3;
+    stroke-width: 20px;
+  }
 
   /* Swiper Customizations */
   .swiper-button-next,

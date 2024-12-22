@@ -26,7 +26,7 @@ const CompanyCard = memo(({ company, handleOpen }) => {
             }}
           >
             <img
-              src={`${backendUrl}/images/logos/${company.logo}`}
+              src={`${company.logo}`}
               alt="Logo"
               width="35px"
               height="35px"

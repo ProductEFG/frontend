@@ -40,18 +40,19 @@ const AdminUsers = () => {
   }, [searchText, fetchSearchUsers]);
 
   return (
-    <div className="w-full h-[50vh] p-5">
+    <div className="w-full h">
       {" "}
-      <Stack spacing={2}>
-        <h3 className="text-2xl font-bold">All Users</h3>
+      <Stack spacing={1}>
+        <h3 className="text-xl font-bold">All Users</h3>
         <div className="flex flex-row justify-between items-center">
-          <div className="w-[478px] h-[62px]">
+          <div className="w-[40%]">
             <FormField
               type="text"
               startAdornmentUrl="/images/magnifying_glass.svg"
               placeholder="Search Users"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              backgroundColor="#FFFFFF"
             />
           </div>
         </div>

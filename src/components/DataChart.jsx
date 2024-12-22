@@ -9,13 +9,15 @@ import {
   Line,
 } from "recharts";
 import { Stack } from "@mui/material";
-import { format, subDays, subMonths } from "date-fns";
+import {
+  subMonths,
+  subDays,
+  format,
+  startOfMonth,
+  isSameMonth,
+  isSameDay,
+} from "date-fns";
 import Loading from "./Loading";
-
-const CustomDot = (props) => {
-  const { cx, cy, value } = props;
-  return <circle cx={cx} cy={cy} r={8} stroke="#6143F0" fill="#fff" />;
-};
 
 const CustomTooltip = ({ active, payload, type }) => {
   if (active && payload && payload.length) {
@@ -65,14 +67,12 @@ const DataChart = ({ history }) => {
       for (let i = 0; i < 7; i++) {
         const date = subDays(startDate, i);
         const formattedDate = format(date, "dd MMM");
-        const matchingHistory = history.find(
-          (entry) => new Date(entry.date).toDateString() === date.toDateString()
-        );
-        const value = matchingHistory
-          ? type === "sales"
-            ? matchingHistory.number_of_sells
-            : matchingHistory.shares_price
-          : undefined;
+
+        const matchingHistory = history.find((entry) => {
+          return isSameDay(new Date(entry.date), date);
+        });
+        console.log(matchingHistory);
+        const value = matchingHistory ? matchingHistory.shares_price : 0;
         result.push({
           x: formattedDate,
           y: value,
@@ -90,11 +90,7 @@ const DataChart = ({ history }) => {
         const matchingHistory = history.find(
           (entry) => new Date(entry.date).toDateString() === date.toDateString()
         );
-        const value = matchingHistory
-          ? type === "sales"
-            ? matchingHistory.number_of_sells
-            : matchingHistory.shares_price
-          : undefined;
+        const value = matchingHistory ? matchingHistory.shares_price : 0;
         result.push({
           x: formattedDate,
           y: value,
@@ -105,25 +101,37 @@ const DataChart = ({ history }) => {
         }
       }
     } else if (period === "1Y") {
-      // Generate the previous 12 months
       for (let i = 0; i < 12; i++) {
         const date = subMonths(startDate, i);
-        const formattedDate = format(date, "MMM yyyy");
-        const matchingHistory = history.find(
-          (entry) => new Date(entry.date).toDateString() === date.toDateString()
+        const formattedDate = format(date, "MMM");
+        const monthStart = startOfMonth(date);
+
+        // Filter all history entries that belong to the current month
+        const monthlyEntries = history.filter((entry) =>
+          isSameMonth(new Date(entry.date), monthStart)
         );
-        const value = matchingHistory
-          ? type === "sales"
-            ? matchingHistory.number_of_sells
-            : matchingHistory.shares_price
-          : undefined;
+
+        // Calculate the average value for the month
+        const totalValue = monthlyEntries.reduce((sum, entry) => {
+          const value =
+            type === "sales" ? entry.number_of_sells : entry.shares_price;
+          return sum + (value || 0); // Ensure no undefined values
+        }, 0);
+
+        const averageValue =
+          monthlyEntries.length > 0 ? totalValue / monthlyEntries.length : 0;
+
+        // Round the average value to the nearest tens
+        const roundedValue = parseFloat(averageValue.toPrecision(4));
+
         result.push({
           x: formattedDate,
-          y: value,
+          y: roundedValue,
         });
-        if (value !== undefined) {
-          minY = Math.min(minY, value);
-          maxY = Math.max(maxY, value);
+
+        if (monthlyEntries.length > 0) {
+          minY = Math.min(minY, roundedValue);
+          maxY = Math.max(maxY, roundedValue);
         }
       }
     }
@@ -139,8 +147,8 @@ const DataChart = ({ history }) => {
   }, [period, history, type]); // Add history to the dependency array
 
   return (
-    <Stack spacing={3}>
-      <div className="flex flex-row gap-2 items-center">
+    <Stack spacing={2}>
+      <div className="flex flex-row gap-2 items-center pl-4 pt-4">
         <img src="/images/chart_logo.svg" alt="Chart Logo" width={34} />
         <p className="">Chart</p>
       </div>
@@ -195,28 +203,28 @@ const DataChart = ({ history }) => {
         </div>
       ) : (
         <AreaChart
-          width={610}
-          height={270}
+          width={650}
+          height={300}
           data={data}
-          className="-translate-x-10"
-          margin={{ right: 10, left: 10, bottom: 20 }}
+          className="-translate-x-7"
+          margin={{ right: 20, left: 10, bottom: 20, top: 20 }}
         >
+          <div className="recharts-tooltip-cursor" />
+          <CartesianGrid strokeDasharray="5 5" />
           <XAxis
             dataKey="x"
-            padding={{ left: 10, right: 10 }}
             axisLine={false}
             tickLine={false}
             interval={period === "1M" ? 1 : 0}
             tick={{
               angle: -45,
-              dy: 10,
+              dy: 15,
               fontSize: 15,
               fill: "#9AA0A6",
             }}
           />
           <YAxis
             domain={yDomain} // Set the Y-axis domain here
-            padding={{ top: 10, bottom: 10 }}
             axisLine={false}
             tickLine={false}
             interval={0}
@@ -232,7 +240,11 @@ const DataChart = ({ history }) => {
             stroke="#6143F0"
             strokeWidth={4}
             fill="rgba(97, 67, 240, 0.3)"
-            dot={<CustomDot />}
+            activeDot={{
+              r: 8,
+              fill: "#6143F0",
+              strokeWidth: 4,
+            }}
           />
         </AreaChart>
       )}

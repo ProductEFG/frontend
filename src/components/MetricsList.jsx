@@ -51,8 +51,8 @@ const MetricsItem = memo(
     }, []);
 
     return (
-      <div className="bg-white rounded-xl flex flex-row p-4 relative w-full">
-        <Stack direction={"column"} className="flex flex-col gap-3">
+      <div className="bg-white rounded-xl flex flex-row p-4 relative w-full z-0">
+        <Stack direction={"column"} className="flex flex-col gap-3 relative">
           <div className="flex flex-row gap-5 justify-between items-center">
             <h4 className="flex flex-row items-center gap-2 big:text-xl">
               <img
@@ -119,11 +119,13 @@ const MetricsItem = memo(
           </div>
           {/* Background Image */}
           {logo && (
-            <img
-              src={`${backendUrl}/images/logos/${logo}`}
-              alt={`${name} logo`}
-              className="absolute opacity-10 object-contain w-[50%] right-[3%] top-[30%]"
-            />
+            <div className="absolute w-[50%] top-5 right-5 -z-1">
+              <img
+                src={`${logo}`}
+                alt={`${name} logo`}
+                className="opacity-10 object-cover max-w-[100%] max-h-[100%]"
+              />
+            </div>
           )}
         </Stack>
 
@@ -183,7 +185,6 @@ const MetricsList = React.memo(({ handleOpen }) => {
 
   useEffect(() => {
     const updateItemsPerPage = () => {
-      console.log(window.innerHeight);
       if (window.innerHeight >= 1028) {
         setNumberPerPage(3);
       } else if (window.innerHeight >= 750) {
@@ -276,62 +277,29 @@ const MetricsList = React.memo(({ handleOpen }) => {
           }, [])
           .map((item, index) => (
             <SwiperSlide key={index} className="flex flex-col gap-4">
-              {item[0] && (
-                <MetricsItem
-                  title={item[0].title}
-                  tableHeader={item[0].tableHeader}
-                  icon={item[0].icon}
-                  description={item[0].description}
-                  name={item[0].data[0]?.name}
-                  acronym={item[0].data[0]?.acronym}
-                  logo={item[0].data[0]?.logo}
-                  price={item[0].data[0]?.current_price}
-                  current_return={item[0].data[0]?.current_return}
-                  number={
-                    item[0].data[0]?.number_of_trades ||
-                    item[0].data[0]?.current_visitors
-                  }
-                  companyList={item[0].data}
-                  openCompany={handleOpen}
-                />
-              )}
-              {item[1] && (
-                <MetricsItem
-                  title={item[1].title}
-                  tableHeader={item[1].tableHeader}
-                  icon={item[1].icon}
-                  description={item[1].description}
-                  name={item[1].data[0]?.name}
-                  acronym={item[1].data[0]?.acronym}
-                  logo={item[1].data[0]?.logo}
-                  price={item[1].data[0]?.current_price}
-                  current_return={item[1].data[0]?.current_return}
-                  number={
-                    item[1].data[0]?.number_of_trades ||
-                    item[1].data[0]?.current_visitors
-                  }
-                  companyList={item[1].data}
-                  openCompany={handleOpen}
-                />
-              )}
-              {item[2] && (
-                <MetricsItem
-                  title={item[2].title}
-                  tableHeader={item[2].tableHeader}
-                  icon={item[2].icon}
-                  description={item[2].description}
-                  name={item[2].data[0]?.name}
-                  acronym={item[1].data[0]?.acronym}
-                  logo={item[2].data[0]?.logo}
-                  price={item[2].data[0]?.current_price}
-                  current_return={item[2].data[0]?.current_return}
-                  number={
-                    item[2].data[0]?.number_of_trades ||
-                    item[2].data[0]?.current_visitors
-                  }
-                  companyList={item[2].data}
-                  openCompany={handleOpen}
-                />
+              {item.map(
+                (metric, index) =>
+                  metric && (
+                    <MetricsItem
+                      key={index}
+                      title={metric.title}
+                      tableHeader={metric.tableHeader}
+                      icon={metric.icon}
+                      description={metric.description}
+                      name={metric.data[0]?.name}
+                      acronym={metric.data[0]?.acronym}
+                      logo={metric.data[0]?.logo}
+                      price={metric.data[0]?.current_price}
+                      current_return={metric.data[0]?.current_return}
+                      number={
+                        metric.title === "Most Visited"
+                          ? metric.data[0]?.current_visitors
+                          : metric.data[0]?.number_of_trades
+                      }
+                      companyList={metric.data}
+                      openCompany={handleOpen}
+                    />
+                  )
               )}
             </SwiperSlide>
           ))}

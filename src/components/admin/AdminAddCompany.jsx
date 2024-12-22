@@ -60,6 +60,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
   };
 
   const handleSubmit = async (e) => {
+    setLoading(true);
     e.preventDefault();
     const formData = new FormData();
 
@@ -76,6 +77,8 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
       setSuccess(true);
     } catch (error) {
       setError(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -94,7 +97,6 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 690,
             bgcolor: "white",
             borderRadius: "10px",
             boxShadow: 24,
@@ -132,7 +134,6 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
             top: "50%",
             left: "50%",
             transform: "translate(-50%, -50%)",
-            width: 580,
             bgcolor: "white",
             borderRadius: "10px",
             boxShadow: 24,
@@ -144,10 +145,10 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
               <div className="flex flex-row gap-4 justify-center items-center">
                 <img
                   src={`/images/admin/add_new_company.svg`}
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
                 />
-                <h3 className="font-semibold text-[24px]">Add New Company</h3>
+                <h3 className="font-semibold text-xl">Add New Company</h3>
               </div>
             </div>
             <div
@@ -164,8 +165,8 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
                 borderRadius: "100px",
                 bgcolor: "#F7F7F7",
                 boxShadow: "none",
-                width: "130px",
-                height: "130px",
+                width: "120px",
+                height: "120px",
                 display: "relative",
                 justifyContent: "center",
                 alignItems: "center",
@@ -191,7 +192,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
               <img
                 src="/images/admin/image_edit.svg"
                 alt="Image Upload"
-                className="absolute right-0 bottom-0"
+                className="absolute -right-1 -bottom-1"
               />
             </Button>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -201,7 +202,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
                 placeholder="Company Name"
                 value={data.name}
                 onChange={handleValueChange}
-                className="w-[530px] h-[64px] bg-white-100 p-5 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple border-[1px] border-grey"
+                className="w-full bg-white-100 pl-5 p-3 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple border-[1px] border-grey"
               />
               <input
                 type="text"
@@ -209,7 +210,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
                 placeholder="Company Acronym"
                 value={data.acronym}
                 onChange={handleValueChange}
-                className="w-[530px] h-[64px] bg-white-100 p-5 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple border-[1px] border-grey"
+                className="w-full bg-white-100 pl-5 p-3 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple border-[1px] border-grey"
               />
               <input
                 type="text"
@@ -217,7 +218,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
                 placeholder="Establishment Type"
                 value={data.establishment_type}
                 onChange={handleValueChange}
-                className="w-[530px] h-[64px] bg-white-100 p-5 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple border-[1px] border-grey"
+                className="w-full bg-white-100 pl-5 p-3 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple border-[1px] border-grey"
               />
               <textarea
                 type="text"
@@ -225,7 +226,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
                 placeholder="Company Description"
                 value={data.description}
                 onChange={handleValueChange}
-                className="w-[530px] h-[112px] bg-white-100 p-5 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple overflow-auto border-[1px] border-grey"
+                className="w-full h-full bg-white-100 pl-5 p-3 border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple overflow-auto border-[1px] border-grey"
               />
               <div className="flex flex-row items-center gap-3">
                 <img src="/images/admin/image_upload_flag.svg" />
@@ -240,7 +241,7 @@ const AdminAddCompany = ({ open, handleClose, fetchAvailableCompanies }) => {
                 )}
                 <button
                   type="submit"
-                  className={`flex justify-center items-center w-[136px] h-[56px] px-5 py-3 rounded-full focus:outline-none focus:ring-2 tracking-wider float-end ${
+                  className={`text-sm flex justify-center items-center px-10 py-3 rounded-full focus:outline-none focus:ring-2 tracking-wider float-end ${
                     isAllDataAvailable()
                       ? "bg-purple text-white"
                       : "bg-purple-300 text-white cursor-not-allowed"

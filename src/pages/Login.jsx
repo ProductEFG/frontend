@@ -6,6 +6,7 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 import { useNavigate } from "react-router";
 import UserEntity from "../entities/userEntity.js";
 import { Link } from "react-router-dom";
+import { tabs } from "../data/constants.js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -38,6 +39,11 @@ const Login = () => {
       const user = await userService.login(username, password);
       await setUser(new UserEntity(user));
       sessionStorage.setItem("token", JSON.stringify(user));
+
+      const enabledTabs = Array.from({ length: tabs.length }, (_, index) =>
+        index === 0 ? false : true
+      );
+      sessionStorage.setItem("enabledTabs", JSON.stringify(enabledTabs));
       navigate("/");
     } catch (error) {
       setLoginError(error.message);
@@ -56,7 +62,7 @@ const Login = () => {
   }, [navigate, user]);
 
   return (
-    <div className="flex flex-row w-screen h-screen overflow-hidden p-6">
+    <div className="flex flex-row w-screen h-screen overflow-hidden p-6 justify-center items-center">
       <div className="flex flex-row big:justify-center big:items-center">
         <img src="/images/login.svg" alt="Login" className="big:w-[80%]" />
 

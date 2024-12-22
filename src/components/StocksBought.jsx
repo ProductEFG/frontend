@@ -17,10 +17,7 @@ const Images = ({ image1, image2, image3, image4 }) => {
           boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <img
-          src={`${backendUrl}/images/logos/${image1}`}
-          className="w-full h-full object-fit"
-        />
+        <img src={`${image1}`} className="w-full h-full object-fit" />
       </div>
 
       {/* 2nd Image (2nd Highest Percentage) */}
@@ -31,10 +28,7 @@ const Images = ({ image1, image2, image3, image4 }) => {
             boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <img
-            src={`${backendUrl}/images/logos/${image2}`}
-            className="w-full h-full object-fit"
-          />
+          <img src={`${image2}`} className="w-full h-full object-fit" />
         </div>
       )}
       {/* 3rd Image (3rd Highest Percentage) */}
@@ -45,10 +39,7 @@ const Images = ({ image1, image2, image3, image4 }) => {
             boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <img
-            src={`${backendUrl}/images/logos/${image3}`}
-            className="w-full h-full object-fit"
-          />
+          <img src={`${image3}`} className="w-full h-full object-fit" />
         </div>
       )}
       {/* 4th Image (4th Highest Percentage) */}
@@ -59,17 +50,14 @@ const Images = ({ image1, image2, image3, image4 }) => {
             boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
           }}
         >
-          <img
-            src={`${backendUrl}/images/logos/${image4}`}
-            className="w-full h-full object-fit"
-          />
+          <img src={`${image4}`} className="w-full h-full object-fit" />
         </div>
       )}
     </div>
   );
 };
 
-const StocksBought = ({ userStocks, setNumberOfAssets }) => {
+const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
   const { user } = useAuth();
   const [totalValue, setTotalValue] = useState(0);
   const [totalReturn, setTotalReturn] = useState(0);
@@ -320,6 +308,7 @@ const StocksBought = ({ userStocks, setNumberOfAssets }) => {
           open={open}
           handleClose={handleClose}
           userStocksDetails={companySpendDetails}
+          withdrawHandle={withdrawHandle}
         />
       )}
     </div>

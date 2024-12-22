@@ -42,14 +42,14 @@ const SuccessfulWithdrawModal = ({ open, handleClose, handleNavigate }) => {
             <Button
               name="Back to Portfolio"
               onClick={(e) => {
-                handleNavigate(e, "My Portfolio");
+                handleNavigate(e, "My Portfolio", 4);
               }}
               otherClasses="bg-white border border-[1px] border-purple text-purple w-[260px] h-[46px]"
             />
             <Button
               name="Check Leaderboard"
               onClick={(e) => {
-                handleNavigate(e, "Leader board");
+                handleNavigate(e, "Leaderboard", 4);
               }}
               otherClasses="bg-purple text-white w-[260px] h-[46px]"
             />

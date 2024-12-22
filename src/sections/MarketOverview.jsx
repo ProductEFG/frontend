@@ -8,7 +8,7 @@ import CompanyList from "../components/CompanyList.jsx";
 import CompanyDetailsModal from "../components/CompanyDetailsModal.jsx";
 import { useAuth } from "../providers/AuthProvider.jsx";
 
-const MarketOverview = ({ balance }) => {
+const MarketOverview = ({ setCompanyBought, ReturnsMadeHandle }) => {
   const { user } = useAuth();
 
   const [availableCompanies, setAvailableCompanies] = useState([]);
@@ -39,8 +39,14 @@ const MarketOverview = ({ balance }) => {
       setCompaniesLoading(true);
 
       const companies = await companyService.getCompanies(10000000);
-      setAvailableCompanies(companies);
-      setFilteredcompanies(companies);
+
+      // Sort companies alphabetically by their name
+      const sortedCompanies = companies.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      setAvailableCompanies(sortedCompanies);
+      setFilteredcompanies(sortedCompanies);
 
       setCompaniesLoading(false);
     } catch (error) {
@@ -81,6 +87,7 @@ const MarketOverview = ({ balance }) => {
             companiesLoading={companiesLoading}
             filteredcompanies={filteredcompanies}
             handleOpen={handleOpen}
+            setCompanyBought={setCompanyBought}
           />
         </Stack>
         <Stack spacing={2} className="w-[38%]">
@@ -103,6 +110,8 @@ const MarketOverview = ({ balance }) => {
           open={open}
           handleClose={handleClose}
           company={openedCompany}
+          setCompanyBought={setCompanyBought}
+          ReturnsMadeHandle={ReturnsMadeHandle}
         />
       )}
     </section>

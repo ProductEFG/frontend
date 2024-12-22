@@ -46,8 +46,14 @@ const AdminCompanies = () => {
       setCompaniesLoading(true);
 
       const companies = await companyService.getCompanies(1000000);
-      setAvailableCompanies(companies);
-      setFilteredcompanies(companies);
+
+      // Sort companies alphabetically by their name
+      const sortedCompanies = companies.sort((a, b) =>
+        a.name.localeCompare(b.name)
+      );
+
+      setAvailableCompanies(sortedCompanies);
+      setFilteredcompanies(sortedCompanies);
 
       setCompaniesLoading(false);
     } catch (error) {
@@ -79,30 +85,30 @@ const AdminCompanies = () => {
     return () => {};
   }, [searchText]);
   return (
-    <div className="w-full h-[50vh] p-5">
-      {" "}
+    <div className="container h-[50vh]">
       <Stack spacing={2}>
         <h3 className="text-2xl font-bold">All Companies</h3>
-        <div className="flex flex-row justify-between items-center">
-          <div className="w-[478px] h-[62px]">
+        <div className="flex flex-row justify-between items-center gap-5">
+          <div className="w-[40%]">
             <FormField
               type="text"
               startAdornmentUrl="/images/magnifying_glass.svg"
               placeholder="Search Companies"
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
+              backgroundColor="#FFFFFF"
             />
           </div>
-          <div className="flex flex-row justify-end items-center gap-5">
+          <div className="flex flex-row justify-end items-center gap-2">
             <button
-              className="w-[237px] h-[51px] bg-purple rounded-3xl text-white text-[18px] flex flex-row justify-center items-center gap-2"
+              className="bg-purple rounded-3xl text-white flex flex-row justify-center items-center gap-2 p-3 pr-5 pl-5"
               onClick={() => setOpenAdd(true)}
             >
               <img src="/images/admin/add_company.svg" alt="Add New Company" />{" "}
               Add New Company
             </button>
             <button
-              className="w-[288px] h-[51px] bg-[#31CFCB] rounded-3xl text-white text-[18px] flex flex-row justify-center items-center gap-2"
+              className="bg-[#31CFCB] rounded-3xl text-white flex flex-row justify-center items-center gap-2 p-3 pr-5 pl-5"
               onClick={() => setOpenUpload(true)}
             >
               <img

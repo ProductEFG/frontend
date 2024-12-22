@@ -11,34 +11,33 @@ const UserCard = ({ user }) => {
     setSelectedUser(null);
   };
   return (
-    <div className="border p-4 rounded-xl shadow-md cursor-pointer w-[250px]">
+    <div className="border p-4 rounded-xl shadow-md cursor-pointer min-w-[242px] max-w-[242px]">
       <Stack
         direction={"column"}
-        spacing={2}
+        spacing={1}
         className="flex justify-center items-center"
       >
-        <div className="rounded-full bg-gray-100 p-4 w-[8rem] h-[8rem]">
+        <div className="rounded-full bg-gray-100 p-4 w-[7rem] h-[7rem]">
           <img
             src={`/images/avatars/${user.avatar}.svg`}
-            width={100}
-            height={100}
-            className="rounded-full bg-[#D88EA9]"
+            className="rounded-full bg-[#D88EA9] max-w-[100%] max-h-[100%]"
           />
         </div>
         <div className="text-center">
-          <h3 className="font-bold text-black text-2xl pb-1">
+          <h3 className="font-bold text-black text-xl pb-1">
             {user.getFullName()}
           </h3>
-          <p className="text-xl text-white-300">
+          <p className="text-lg text-white-300">
             Joined {user.getCreatedDate()}
           </p>
         </div>
 
         <div className="flex flex-row items-center gap-2 justify-center">
-          <p className=" text-purple font-bold">Current Portfolio:</p>
+          <p className=" text-purple font-bold text-sm">Current Portfolio:</p>
           <Price
             price={user.getTotalBalance().toFixed(2)}
-            styles={"absolute -right-4 -top-0.5 w-3.5"}
+            styles={"absolute -right-2.5 top-0 w-2.5"}
+            textStyles={"text-sm"}
           />
         </div>
         <Button

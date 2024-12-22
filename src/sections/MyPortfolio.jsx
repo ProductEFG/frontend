@@ -51,6 +51,7 @@ const MyPortfolio = ({ withdrawHandle }) => {
           <StocksBought
             userStocks={userStocks}
             setNumberOfAssets={setNumberOfAssets}
+            withdrawHandle={withdrawHandle}
           />
         </div>
 
