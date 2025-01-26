@@ -77,7 +77,7 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
                 <img
                   src="/images/return_balance.svg"
                   alt="return balance"
-                  className="mr-1 w-4 big:w-6" 
+                  className="mr-1 w-4 big:w-6"
                 />
               ) : (
                 <img
@@ -109,7 +109,9 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
           You have lost{" "}
           <Price
             price={Math.abs(added_amount).toFixed(2)}
-            styles={"absolute -right-2 top-0 w-3 big:w-3.5 big:-top-1 big:-right-3"}
+            styles={
+              "absolute -right-2 top-0 w-3 big:w-3.5 big:-top-1 big:-right-3"
+            }
             textStyles={"text-sm big:text-[16px]"}
             type="2"
             font="normal"
@@ -117,7 +119,11 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
           &nbsp;&nbsp;&nbsp;from your portfolio{" "}
         </p>
       )}
-      <Stack direction={"column"} spacing={2} className="pt-5 big:flex big:space-y-6">
+      <Stack
+        direction={"column"}
+        spacing={5}
+        className="pt-5 big:flex big:space-y-6"
+      >
         <div className="space-y-1 big:space-y-3">
           <h6 className="text-[#31CFCB] big:text-xl">Available Cash Balance</h6>
           <div className="flex items-start gap-1 w-full relative">
@@ -131,7 +137,7 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
             />
           </div>
         </div>
-        <div className="space-y-1 big:space-y-3">
+        {/* <div className="space-y-1 big:space-y-3">
           <h6 className="text-[#31CFCB] big:text-xl">Invested Amount</h6>
           <div className="flex items-start gap-1 w-full relative">
             <p className="text-white text-2xl big:text-3xl">
@@ -143,7 +149,7 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
               className="w-3 big:w-5" // Adjust width as needed
             />
           </div>
-        </div>
+        </div> */}
         <div className="space-y-1 big:space-y-3">
           <h6 className="text-[#31CFCB] big:text-xl">Profit Made</h6>
           <div className="flex items-start gap-1 w-full relative">
@@ -179,7 +185,7 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
       <Button
         name="Withdraw"
         onClick={withdrawHandle}
-        otherClasses="bg-[#31CFCB] text-white w-[148px] my-5 big:w-[240px] big:text-lg flex items-center justify-center big:mt-16"
+        otherClasses="bg-[#31CFCB] text-white w-full my-5 big:text-lg flex items-center justify-center big:mt-16 mt-10"
       />
     </div>
   );

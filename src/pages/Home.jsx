@@ -76,27 +76,30 @@ const Home = () => {
                 },
               }}
             >
-              {tabs.map((label, index) => (
-                <Tab
-                  key={label}
-                  label={label}
-                  value={label}
-                  sx={{
-                    fontSize: "20px",
-                    color: "#9AA0A6",
-                    fontWeight: "normal",
-                    textTransform: "none",
-                    transition: "all 0.3s ease",
-                    cursor: enabledTabs[index] ? "not-allowed" : "pointer",
-                    opacity: enabledTabs[index] ? 0.5 : 1,
-                    "&.Mui-selected": {
-                      backgroundColor: "#6143F0",
-                      color: "white",
-                    },
-                  }}
-                  disabled={enabledTabs[index]}
-                />
-              ))}
+              {tabs.map(
+                (label, index) =>
+                  (label !== "Returns Made" || view === "Returns Made") && (
+                    <Tab
+                      key={label}
+                      label={label}
+                      value={label}
+                      sx={{
+                        fontSize: "20px",
+                        color: "#9AA0A6",
+                        fontWeight: "normal",
+                        textTransform: "none",
+                        transition: "all 0.3s ease",
+                        cursor: enabledTabs[index] ? "not-allowed" : "pointer",
+                        opacity: enabledTabs[index] ? 0.5 : 1,
+                        "&.Mui-selected": {
+                          backgroundColor: "#6143F0",
+                          color: "white",
+                        },
+                      }}
+                      disabled={enabledTabs[index]}
+                    />
+                  )
+              )}
             </TabList>
           </Box>
           <TabPanel value="Market Overview" sx={{ padding: 0 }}>

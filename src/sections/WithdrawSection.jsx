@@ -118,6 +118,13 @@ const WithdrawSection = ({ navigationHandle }) => {
     }
   };
 
+  const adjustBalance = (walletBalance) => {
+    const decimalPart = walletBalance % 1; // Get the decimal part
+    return decimalPart <= 0.1
+      ? Math.floor(walletBalance)
+      : Math.ceil(walletBalance);
+  };
+
   useEffect(() => {
     const controller = new AbortController();
     const signal = controller.signal;
@@ -145,7 +152,7 @@ const WithdrawSection = ({ navigationHandle }) => {
           </div>
           <div className="flex justify-center items-center pt-5">
             <Price
-              price={Math.floor(user.wallet_balance)}
+              price={adjustBalance(user.wallet_balance)}
               styles={
                 "absolute -top-1 -right-5 w-5 big:w-8 big:-top-3 big:-right-8"
               }
@@ -177,7 +184,7 @@ const WithdrawSection = ({ navigationHandle }) => {
               <CustomSlider
                 value={withdrawQuantity}
                 onChange={handleChange}
-                max={Math.floor(user.wallet_balance)}
+                max={adjustBalance(user.wallet_balance)}
                 valueLabelDisplay="off"
               />
             </div>
