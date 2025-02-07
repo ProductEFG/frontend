@@ -94,7 +94,14 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
         const companyName = stock.companyId.name;
         const companyLogo = stock.companyId.logo;
         const companyAcronym = stock.companyId.acronym;
-        const stockValue = stock.quantity * stock.companyId.current_price;
+        let stockValue = 0;
+        if (
+          new Date(stock.createdAt).toDateString() === new Date().toDateString()
+        ) {
+          stockValue = stock.quantity * stock.companyId.temp_price;
+        } else {
+          stockValue = stock.quantity * stock.companyId.current_price;
+        }
         const spent = stock.quantity * stock.buy_price;
         totalStockValue += stockValue;
         totalSpent += spent;
