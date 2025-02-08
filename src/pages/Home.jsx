@@ -33,7 +33,7 @@ const Home = () => {
     return savedState ? JSON.parse(savedState) : { count: 0 };
   });
 
-  const handleChange = (event, newView, index) => {
+  const handleChange = (newView, index) => {
     setView(newView);
     const newEnabledTabs = enabledTabs;
     newEnabledTabs[index] = false;
@@ -66,40 +66,68 @@ const Home = () => {
         }}
       >
         <TabContext value={view}>
-          <Box>
+          <Box
+            sx={{
+              maxWidth: "1150px",
+              width: "100%",
+              mx: "auto",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "white",
+              paddingTop: "18px",
+              paddingBottom: "9px",
+              paddingRight: "56px",
+              paddingLeft: "56px",
+              borderRadius: "16px",
+              gap: 2,
+            }}
+          >
             <TabList
               onChange={handleChange}
               aria-label="Home page views"
               sx={{
+                width: "100%",
                 "& .MuiTabs-indicator": {
-                  display: "none", // Hide default indicator
+                  display: "none",
+                },
+                "& .MuiTabs-flexContainer": {
+                  display: "flex",
+                  justifyContent: "space-between",
+                  width: "100%",
                 },
               }}
             >
-              {tabs.map(
-                (label, index) =>
-                  (label !== "Returns Made" || view === "Returns Made") && (
-                    <Tab
-                      key={label}
-                      label={label}
-                      value={label}
-                      sx={{
-                        fontSize: "20px",
-                        color: "#9AA0A6",
-                        fontWeight: "normal",
-                        textTransform: "none",
-                        transition: "all 0.3s ease",
-                        cursor: enabledTabs[index] ? "not-allowed" : "pointer",
-                        opacity: enabledTabs[index] ? 0.5 : 1,
-                        "&.Mui-selected": {
-                          backgroundColor: "#6143F0",
-                          color: "white",
-                        },
-                      }}
-                      disabled={enabledTabs[index]}
-                    />
-                  )
-              )}
+              {tabs.map((label, index) => (
+                <div className={`flex flex-col justify-center items-center`}>
+                  <div className="w-[63px] h-[63px] bg-[#E9EBEB] hexagon"></div>
+                  <Tab
+                    key={label}
+                    label={label}
+                    value={label}
+                    sx={{
+                      fontSize: "14px",
+                      color: "#6E7191",
+                      fontWeight: "500",
+                      textTransform: "none",
+                      transition: "all 0.3s ease",
+                      padding: 0,
+                      // cursor: enabledTabs[index] ? "not-allowed" : "pointer",
+                      // opacity: enabledTabs[index] ? 0.5 : 1,
+                      height: "fit-content",
+                      "&.Mui-selected": {
+                        backgroundColor: "#6143F0",
+                        color: "white",
+                      },
+                      "&.MuiButtonBase-root": {
+                        paddingTop: "5px",
+                        minHeight: "fit-content",
+                      },
+                    }}
+                    // disabled={enabledTabs[index]}
+                  />
+                </div>
+              ))}
             </TabList>
           </Box>
           <TabPanel value="Market Overview" sx={{ padding: 0 }}>

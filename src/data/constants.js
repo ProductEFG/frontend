@@ -30,9 +30,11 @@ export const femaleAvatars = [
 ];
 
 export const tabs = [
-  "Market Overview",
+  "Market Insights",
+  "Invest",
   "Returns Made",
-  "My Portfolio",
+  "Portfolio",
+  "Returns Made",
   "Withdraw",
   "Leaderboard",
 ];
