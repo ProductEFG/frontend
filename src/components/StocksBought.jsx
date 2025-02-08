@@ -117,7 +117,7 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
             acronym: companyAcronym,
             returns: stock.companyId.current_return,
             visitors: stock.companyId.current_visitors,
-            price: stock.companyId.current_price,
+            price: stock.companyId.temp_price,
             return: stock.companyId.current_return,
             value: stockValue,
             quantity: stock.quantity,
