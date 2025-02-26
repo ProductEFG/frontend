@@ -16,12 +16,12 @@ const Navbar = () => {
     navigate("/login");
   };
   return (
-    <div className="flex flex-row justify-between items-center h-24 bg-white w-screen overflow-hidden">
-      <div className="w-[58%] flex justify-end">
+    <div className="relative flex flex-row justify-center items-center h-24 bg-white w-screen overflow-hidden">
+      <div className="">
         <img src="/images/main_logos.jpg" />
       </div>
       {user && (
-        <div className="pr-6">
+        <div className="pr-6 absolute right-0">
           <div className="h-16 rounded-full bg-white-100 flex flex-row justify-between items-center w-[100%] p-3">
             <div className="flex flex-row justify-center items-center pr-5">
               <div className="bg-[#D88EA9] rounded-full w-12 h-12 flex justify-center items-center">

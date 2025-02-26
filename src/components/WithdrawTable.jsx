@@ -104,7 +104,7 @@ export default function WithdrawTable({ columns, rows }) {
   return (
     <div
       style={{
-        height: "56vh",
+        height: "52vh",
         width: "100%",
         border: "none",
         paddingRight: 20,

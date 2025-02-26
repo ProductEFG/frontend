@@ -14,7 +14,6 @@ import { useAuth } from "../providers/AuthProvider";
 
 const DataTable = ({ data, thirdColumn, onViewStock }) => {
   const location = useLocation();
-  const { backendUrl } = useAuth();
 
   // Define the header labels based on the third column prop
   const headers = [

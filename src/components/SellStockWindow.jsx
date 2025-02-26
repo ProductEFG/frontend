@@ -6,9 +6,11 @@ import Button from "./Button.jsx";
 import { userStocksService } from "../services/userStocks.service.js";
 import { userService } from "../services/user.service.js";
 import UserEntity from "../entities/userEntity.js";
+import { useGlobal } from "@/providers/GlobalProvider.jsx";
 
-const SellStockWindow = ({ company, withdrawHandle }) => {
-  const { user, setUser, backendUrl } = useAuth();
+const SellStockWindow = ({ company }) => {
+  const { user, setUser } = useAuth();
+  const { handleNav, setCompanySold } = useGlobal();
 
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -37,13 +39,21 @@ const SellStockWindow = ({ company, withdrawHandle }) => {
         companyId: company.id,
         quantity: quantity,
       };
-      const updatedUser = await userStocksService.sellStocks(userStocksData);
-      setUser(new UserEntity(updatedUser));
-      sessionStorage.setItem("token", JSON.stringify(updatedUser));
+      const data = await userStocksService.sellStocks(userStocksData);
+      setUser(new UserEntity(data.updatedUser));
+      sessionStorage.setItem("token", JSON.stringify(data.updatedUser));
       setSuccess("Stocks have been sold successfully");
       setError("");
+
+      const companySold = {
+        ...data.transactionDetails,
+        ...company,
+      };
+      setCompanySold(companySold);
+      sessionStorage.setItem("companySold", JSON.stringify(companySold));
+
       company.quantity -= quantity;
-      withdrawHandle();
+      handleNav();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -62,17 +72,18 @@ const SellStockWindow = ({ company, withdrawHandle }) => {
           Sell {company.acronym}{" "}
           <img src={`${company.logo}`} width={30} height={30} />
         </h3>
-        <p className="flex flex-row items-center text-xs">
+        <div className="flex flex-row items-center text-xs">
           <img src="/images/stock_arrow.svg" alt="Stock" /> 1 ={" "}
           <Price
             price={company.price}
-            styles={"absolute -right-2.5 top-0 w-2"}
-            textStyles="pl-2"
+            imgStyles={"w-2"}
+            textStyles="pl-2 gap-0.5"
+            type={2}
           />
-        </p>
+        </div>
       </div>
       <div className=" flex flex-col gap-3 relative">
-        <div className="h-[97px] bg-white-100 rounded-2xl">
+        <div className="bg-white-100 rounded-2xl">
           <Stack spacing={1} className="p-3 pl-4">
             <div>
               <h3 className="text-xs">Current Ownership</h3>
@@ -81,22 +92,29 @@ const SellStockWindow = ({ company, withdrawHandle }) => {
               </p>
             </div>
             <div className="flex flex-row justify-between items-center">
-              {" "}
-              <input
-                type="number"
-                value={quantity}
-                min={1}
-                onChange={(e) => {
-                  if (e.target.value < 0) {
-                    setError("");
-                    setQuantity(1);
-                  } else {
-                    setError("");
-                    setQuantity(e.target.value);
+              <div className="flex justify-between items-center w-[50%] mt-[18px]">
+                <button
+                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
+                  onClick={() =>
+                    setQuantity((prev) =>
+                      prev + 1 > company.quantity ? prev : ++prev
+                    )
                   }
-                }}
-                className="bg-white-100 text-lg w-[40%]"
-              />
+                >
+                  +
+                </button>
+                <span className="font-semibold">{quantity}</span>
+                <button
+                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
+                  onClick={() =>
+                    setQuantity((prev) => {
+                      return prev > 1 ? --prev : 1;
+                    })
+                  }
+                >
+                  -
+                </button>
+              </div>
               <p className="text-white-200 tracking-wider">Shares</p>
             </div>
           </Stack>
@@ -107,8 +125,9 @@ const SellStockWindow = ({ company, withdrawHandle }) => {
               <h3 className="text-xs">Available Balance</h3>
               <Price
                 price={user.wallet_balance.toLocaleString()}
-                styles="absolute -right-3.5 -top-0.5 w-3"
+                imgStyles={"w-[11px]"}
                 textStyles={"text-white-200 text-xs"}
+                type={2}
               />
             </div>
             <div className="flex flex-row justify-between items-center">
@@ -127,7 +146,7 @@ const SellStockWindow = ({ company, withdrawHandle }) => {
           alt="Trade Between"
           width={42}
           height={42}
-          className="absolute left-[45%] top-[40%]"
+          className="absolute right-[30%] top-[44%]"
         />
         {error.length > 0 && (
           <p className="text-red-600 text-center text-sm">{error}</p>

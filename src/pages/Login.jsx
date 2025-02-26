@@ -40,9 +40,7 @@ const Login = () => {
       await setUser(new UserEntity(user));
       sessionStorage.setItem("token", JSON.stringify(user));
 
-      const enabledTabs = Array.from({ length: tabs.length }, (_, index) =>
-        index === 0 ? false : true
-      );
+      const enabledTabs = 0;
       sessionStorage.setItem("enabledTabs", JSON.stringify(enabledTabs));
       navigate("/");
     } catch (error) {

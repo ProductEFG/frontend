@@ -1,19 +1,29 @@
+import clsx from "clsx";
 import React from "react";
 
-const Return = ({ type, number }) => {
+const Return = ({
+  type,
+  number,
+  textStyles,
+  imgStyles,
+  imgType = "return",
+}) => {
   return (
     <div
-      className={`${
-        type === "positive" ? "text-green-600" : "text-red-600"
-      } text-xs big:text-sm flex flex-row items-center`}
+      className={clsx(
+        `${
+          type === "positive" ? "text-green-600" : "text-red-600"
+        } flex flex-row items-center gap-1`,
+        textStyles
+      )}
     >
-      <img
-        src={`/images/${
-          type === "positive" ? "return_positive" : "return_negative"
-        }.svg`}
-        alt="type"
-        className="w-4 big:w-5"
-      />
+      <div className={imgStyles}>
+        <img
+          src={`/images/${imgType}_${type}.svg`}
+          alt="type"
+          className="w-full h-auto"
+        />
+      </div>
       {type === "positive" ? "+" : ""}
       {number}%
     </div>

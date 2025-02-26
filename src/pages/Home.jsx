@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../providers/AuthProvider";
 import Navbar from "../components/Navbar";
@@ -14,32 +14,30 @@ import LeaderboardsTable from "../sections/LeaderboardsTable";
 import WithdrawSection from "../sections/WithdrawSection";
 import ReturnsMade from "../sections/ReturnsMade";
 import { tabs } from "../data/constants";
+import MarketInsights from "../sections/MarketInsights";
+import { useGlobal } from "@/providers/GlobalProvider";
+import NavHexagon from "@/components/NavHexagon";
+import Invest from "@/sections/Invest";
+import BuyReturnsMade from "@/sections/BuyReturnsMade";
+import SellReturnsMade from "@/sections/SellReturnsMade";
 
 const Home = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { enabledTabs } = useGlobal();
 
-  const [view, setView] = useState("Market Overview");
-  const [companyBought, setCompanyBought] = useState({
-    companyId: "",
-    companyLogo: "",
-    companyName: "",
-    companyReturn: 0,
-    invested_amount: 0,
-    profit_made: 0,
-  });
-  const [enabledTabs, setEnabledTabs] = useState(() => {
-    const savedState = sessionStorage.getItem("enabledTabs");
-    return savedState ? JSON.parse(savedState) : { count: 0 };
-  });
-
-  const handleChange = (newView, index) => {
-    setView(newView);
-    const newEnabledTabs = enabledTabs;
-    newEnabledTabs[index] = false;
-    setEnabledTabs(newEnabledTabs);
-    sessionStorage.setItem("enabledTabs", JSON.stringify(newEnabledTabs));
-  };
+  const getIcon = useCallback(
+    (name, index) => {
+      let finalName = name;
+      if (index === enabledTabs) {
+        finalName += "_selected";
+      } else if (index < enabledTabs) {
+        finalName += "_unlocked";
+      }
+      return finalName;
+    },
+    [enabledTabs]
+  );
 
   useEffect(() => {
     if (!user) {
@@ -56,16 +54,59 @@ const Home = () => {
   }
 
   return (
-    <section className="w-screen h-screen overflow-hidden">
+    <main className="w-screen h-screen overflow-hidden">
       <Navbar />
-      <Box
+      <div className="mt-[16.5px] container bg-white rounded-xl flex justify-between items-center mx-auto w-full pt-[18px] pb-[9px] px-[56px]">
+        {tabs.map((label, index) => (
+          <div
+            className={`flex flex-col justify-center items-center relative h-full w-[108px]`}
+            key={index}
+          >
+            <NavHexagon
+              color={index < enabledTabs ? "#6143F0" : "#E9EBEB"}
+              borderSize={index <= enabledTabs ? 5 : 0}
+            >
+              <img
+                src={`/images/tab/${getIcon(label.icon, index)}.svg`}
+                alt={`${label.name} icon`}
+              />
+            </NavHexagon>
+            {index < tabs.length - 1 && (
+              <div
+                className={`lg:w-[120px] md:w-[70px] w-[90px] h-[5px] ${
+                  index < enabledTabs || index === 0
+                    ? "bg-purple"
+                    : "bg-[#E9EBEB]"
+                } absolute top-[35%] left-[80%] z-0`}
+              />
+            )}
+            <span
+              className={`text-sm font-medium text-nowrap ${
+                index <= enabledTabs ? "text-purple" : "text-[#6E7191]"
+              } mt-[5px]`}
+            >
+              {label.name}
+            </span>
+          </div>
+        ))}
+      </div>
+      <div className="container mt-4">
+        {enabledTabs === 0 && <MarketInsights />}
+        {enabledTabs === 1 && <Invest />}
+        {enabledTabs === 2 && <BuyReturnsMade />}
+        {enabledTabs === 3 && <MyPortfolio />}
+        {enabledTabs === 4 && <SellReturnsMade />}
+        {enabledTabs === 5 && <WithdrawSection />}
+        {enabledTabs === 6 && <LeaderboardsTable />}
+      </div>
+      {/* <Box
         sx={{
           width: "100%",
           padding: 4,
           paddingTop: 3,
         }}
       >
-        <TabContext value={view}>
+        <TabContext value={enabledTabs}>
           <Box
             sx={{
               maxWidth: "1150px",
@@ -80,17 +121,14 @@ const Home = () => {
               paddingRight: "56px",
               paddingLeft: "56px",
               borderRadius: "16px",
-              gap: 2,
             }}
           >
             <TabList
               onChange={handleChange}
               aria-label="Home page views"
+              TabIndicatorProps={{ style: { display: "none" } }}
               sx={{
                 width: "100%",
-                "& .MuiTabs-indicator": {
-                  display: "none",
-                },
                 "& .MuiTabs-flexContainer": {
                   display: "flex",
                   justifyContent: "space-between",
@@ -99,22 +137,40 @@ const Home = () => {
               }}
             >
               {tabs.map((label, index) => (
-                <div className={`flex flex-col justify-center items-center`}>
-                  <div className="w-[63px] h-[63px] bg-[#E9EBEB] hexagon"></div>
+                <div
+                  className={`flex flex-col justify-center items-center relative h-100`}
+                  key={index}
+                >
+                  {index <= enabledTabs && (
+                    <div className="w-[63px] h-[63px] bg-purple absolute hexagon top-[6.5px] scale-110 z-1" />
+                  )}
+                  {index < tabs.length - 1 && (
+                    <div
+                      className={`w-[100px] h-[5px] ${
+                        index < enabledTabs ? "bg-purple" : "bg-[#E9EBEB]"
+                      } absolute top-[35%] left-[80%] z-0`}
+                    />
+                  )}
+                  <div
+                    className={`w-[63px] h-[63px] hexagon ${
+                      index < enabledTabs ? "bg-purple" : "bg-[#E9EBEB]"
+                    } z-2`}
+                  >
+                    <img
+                      src={`/images/tab/${getIcon(label.icon, index)}.svg`}
+                      alt="Tab Icon"
+                    />
+                  </div>
                   <Tab
-                    key={label}
-                    label={label}
-                    value={label}
+                    label={label.name}
+                    value={index}
                     sx={{
                       fontSize: "14px",
-                      color: "#6E7191",
-                      fontWeight: "500",
+                      color: "#4d4f66",
+                      fontWeight: "semibold",
                       textTransform: "none",
                       transition: "all 0.3s ease",
                       padding: 0,
-                      // cursor: enabledTabs[index] ? "not-allowed" : "pointer",
-                      // opacity: enabledTabs[index] ? 0.5 : 1,
-                      height: "fit-content",
                       "&.Mui-selected": {
                         backgroundColor: "#6143F0",
                         color: "white",
@@ -123,32 +179,42 @@ const Home = () => {
                         paddingTop: "5px",
                         minHeight: "fit-content",
                       },
+                      "&.Mui-disabled": {
+                        color: "#4d4f66",
+                      },
                     }}
-                    // disabled={enabledTabs[index]}
+                    disabled={true}
                   />
                 </div>
               ))}
             </TabList>
           </Box>
-          <TabPanel value="Market Overview" sx={{ padding: 0 }}>
+
+          {tabs.map((tab, index) => (
+            <TabPanel key={index} value={index} sx={{ padding: 0 }}>
+              {index === 0 && <MarketInsights />}
+            </TabPanel>
+          ))}
+          <TabPanel value={0} sx={{ padding: 0 }}>
+            <MarketInsights handleChange={handleChange} />
+          </TabPanel>
+          <TabPanel value={1} sx={{ padding: 0 }}>
             <MarketOverview
               setCompanyBought={setCompanyBought}
-              ReturnsMadeHandle={(e) => handleChange(e, "Returns Made", 1)}
+              ReturnsMadeHandle={handleChange}
             />
           </TabPanel>
           <TabPanel value="Returns Made" sx={{ padding: 0, paddingTop: 2 }}>
             <ReturnsMade
               companyBought={companyBought}
-              portfolioHandle={(e) => handleChange(e, "My Portfolio", 2)}
+              portfolioHandle={handleChange}
             />
           </TabPanel>
           <TabPanel
-            value="My Portfolio"
+            value="Invest"
             sx={{ padding: 0, paddingTop: 2, height: "75vh" }}
           >
-            <MyPortfolio
-              withdrawHandle={(e) => handleChange(e, "Withdraw", 3)}
-            />
+            <MyPortfolio withdrawHandle={handleChange} />
           </TabPanel>
           <TabPanel value="Withdraw" sx={{ padding: 0, paddingTop: 4 }}>
             <WithdrawSection navigationHandle={handleChange} />
@@ -157,8 +223,8 @@ const Home = () => {
             <LeaderboardsTable />
           </TabPanel>
         </TabContext>
-      </Box>
-    </section>
+      </Box> */}
+    </main>
   );
 };
 

@@ -11,8 +11,7 @@ import BuyStockWindow from "./BuyStockWindow";
 import { useAuth } from "../providers/AuthProvider";
 
 const CompanyDetailsModal = memo(
-  ({ open, handleClose, company, setCompanyBought, ReturnsMadeHandle }) => {
-    const { backendUrl } = useAuth();
+  ({ open, handleClose, company, setCompanyBought }) => {
     const [companyHistory, setCompanyHistory] = useState([]);
     const [monthlyVisitors, setMonthlyVisitors] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -22,7 +21,7 @@ const CompanyDetailsModal = memo(
     const { visitorsCount } = useSpring({
       from: { visitorsCount: 0 },
       visitorsCount: monthlyVisitors,
-      config: { duration: 1000 }, // Adjust duration as needed
+      config: { duration: 1000 },
       reset: monthlyVisitors === 0,
     });
 
@@ -70,10 +69,9 @@ const CompanyDetailsModal = memo(
 
           setMonthlyVisitors(totalMonthlyVisitors);
         }
-
-        setLoading(false);
       } catch (error) {
         console.log(error.message);
+      } finally {
         setLoading(false);
       }
     };
@@ -210,7 +208,6 @@ const CompanyDetailsModal = memo(
                 <BuyStockWindow
                   company={company}
                   setCompanyBought={setCompanyBought}
-                  ReturnsMadeHandle={ReturnsMadeHandle}
                 />
               </div>
             </animated.div>

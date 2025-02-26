@@ -2,6 +2,7 @@ import React from "react";
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import Button from "../components/Button.jsx";
+import { useGlobal } from "@/providers/GlobalProvider.jsx";
 
 const style = {
   position: "absolute",
@@ -16,6 +17,7 @@ const style = {
 };
 
 const SuccessfulWithdrawModal = ({ open, handleClose, handleNavigate }) => {
+  const { enabledTabs } = useGlobal();
   return (
     <Modal
       open={open}
@@ -42,14 +44,16 @@ const SuccessfulWithdrawModal = ({ open, handleClose, handleNavigate }) => {
             <Button
               name="Back to Portfolio"
               onClick={(e) => {
-                handleNavigate(e, "My Portfolio", 4);
+                const moveNumber = 3 - enabledTabs;
+                handleNavigate(true, moveNumber);
               }}
               otherClasses="bg-white border border-[1px] border-purple text-purple w-[260px] h-[46px]"
             />
             <Button
               name="Check Leaderboard"
-              onClick={(e) => {
-                handleNavigate(e, "Leaderboard", 4);
+              onClick={() => {
+                const moveNumber = 6 - enabledTabs;
+                handleNavigate(true, moveNumber);
               }}
               otherClasses="bg-purple text-white w-[260px] h-[46px]"
             />

@@ -1,112 +1,112 @@
 import React, { memo } from "react";
-import Stack from "@mui/material/Stack";
-import Grid from "@mui/material/Grid2";
-import Price from "../components/Price";
 import { useLocation } from "react-router";
-import { useAuth } from "../providers/AuthProvider";
 
 const CompanyCard = memo(({ company, handleOpen }) => {
-  const { backendUrl } = useAuth();
+  const isNegativeChange = !(company.current_change > 0);
   const location = useLocation();
   const isAdminHome = location.pathname === "/admin/home";
   return (
-    <Grid key={company._id} size={4} className="bg-white rounded-xl p-2">
-      <Stack spacing={1}>
-        <div className="flex flex-row justify-between text-sm font-semibold">
-          <div
-            className="flex flex-row gap-3 justify-center items-center h-12"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "8px",
-              maxWidth: "150px",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-            }}
-          >
-            <img
-              src={`${company.logo}`}
-              alt="Logo"
-              width="35px"
-              height="35px"
-            />
-            <span
-              style={{ textOverflow: "ellipsis", overflow: "hidden" }}
-              className="text-sm"
-            >
+    <div
+      className="company-card-bg pt-2 px-2 pb-3 rounded-[19px] max-h-fit flex flex-col justify-center items-center gap-3 cursor-pointer"
+      onClick={() => handleOpen(company)}
+    >
+      <div className="bg-white rounded-2xl w-full px-3 py-4">
+        {/* Title */}
+        <div className="flex justify-between items-center gap-5 w-full mb-[18px]">
+          <div className="flex gap-2 w-[50%]">
+            <div className="w-[30px] h-[30px] rounded-full bg-[#F8F9FA] flex justify-center items-center">
+              <img
+                src={`${company.logo}`}
+                alt="Logo"
+                className="w-full h-full object-contain"
+              />
+            </div>
+            <span className="text-[19px] font-semibold truncate w-full">
               {company.name}
             </span>
           </div>
 
-          {company.current_return >= 0 ? (
+          <div
+            className={`w-[28px] h-[28px] flex justify-center items-center shadow-lg border rounded-full ${
+              isNegativeChange ? "border-[#FF413D]" : "border-[#0CAD13]"
+            }`}
+          >
             <img
-              src="/images/positive_return.svg"
-              alt="positive return"
-              width={77}
+              src={`/images/stock_${
+                isNegativeChange ? "negative" : "positive"
+              }.svg`}
+              alt="Stock Trend"
             />
-          ) : (
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="flex flex-col gap-2 mb-3">
+          {/* Stock Price */}
+          <div className="bg-[#FDF3DF] rounded-xl flex justify-between items-center p-2">
+            <div className="flex flex-col">
+              <span className="text-[#8F8F8F] text-sm font-semibold">
+                Stock Price
+              </span>
+              <span className="font-semibold text-[24px] text-[#E27500]">
+                {company.current_price}
+              </span>
+            </div>
+            <div className="w-[34px] h-[34px]">
+              <img
+                src="/images/kidzos-coin.svg"
+                alt="KidZos Icon"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          </div>
+          {/* Price Diff */}
+          <div className="bg-[#EAF5FF] rounded-xl flex justify-between items-center p-2">
+            <div className="flex flex-col">
+              <span className="text-[#8F8F8F] text-sm font-semibold">
+                Price Difference
+              </span>
+              <span
+                className={`font-semibold text-[24px] ${
+                  isNegativeChange ? "text-[#F12705]" : "text-[#0B880B]"
+                }`}
+              >
+                {isNegativeChange ? "" : "+"}
+                {company.current_change.toLocaleString(undefined, {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>
+            </div>
+            <div className="w-[34px] h-[34px]">
+              <img
+                src="/images/rocket.svg"
+                alt="KidZos Icon"
+                className="w-full h-auto object-cover"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Visitors */}
+        <div className="flex flex-row gap-1 justify-center items-center">
+          <div className="min-w-[31px] h-[31px]">
             <img
-              src="/images/negative_return.svg"
-              alt="negative return"
-              width={77}
+              src="/images/visitors.svg"
+              alt="Visitors"
+              className="w-full h-full object-cover"
             />
-          )}
-        </div>
-        <div className="flex flex-row justify-between pr-3 pt-3">
-          <div className="flex flex-row gap-2 text-[#6E7191] font-semibold text-sm">
-            <img src="/images/stock_price.svg" alt="Stock Price" width={24} />
-            Stock price
           </div>
-          <Price
-            price={company.current_price}
-            styles="absolute -right-3 -top-0.5 w-3"
-            textStyles={"text-sm"}
-          />
-        </div>
-        <div className="flex flex-row justify-between pr-1">
-          <div className="flex flex-row gap-1 text-[#6E7191] font-semibold text-sm">
-            <img src="/images/change.svg" alt="Change" width={31} />
-            Change
-          </div>
-          <div className="flex flex-row gap-3 justify-center items-center">
-            <Price
-              price={`${
-                company.current_change < 0 ? "" : "+"
-              }${company.current_change.toFixed(2)}`}
-              styles="absolute -right-3 top-0 w-2.5"
-              textStyles={`text-sm ${
-                company.current_change < 0 ? "text-red-600" : "text-green-500"
-              }`}
-            />
-            <p
-              className={`text-xs tracking-wider ${
-                company.current_return < 0 ? "text-red-600" : "text-green-500"
-              }`}
-            >
-              ({company.current_return >= 0 && "+"}
-              {company.current_return.toFixed(2)}%)
-            </p>
-          </div>
-        </div>
-        <div className="flex flex-row justify-between pr-2">
-          <div className="flex flex-row gap-3 justify-center items-center text-[#6E7191] font-semibold text-sm">
-            <img src="/images/visitors.svg" alt="Change" width={24} />
-            Visitors
-          </div>
-          <p className="font-semibold text-sm">
-            {company.current_visitors.toLocaleString()}
+          <p className="font-semibold text-[13px] text-[#A1A1A1] leading-[15px] w-fit">
+            {company.current_visitors} Visitors are visiting this Establishment
+            now.
           </p>
         </div>
-        <button
-          className="text-xs text-[#0086FF] flex flex-row gap-1 justify-end items-center pr-2"
-          onClick={() => handleOpen(company)}
-        >
-          View Company Details{" "}
-          <img src="/images/topright_arrow.svg" alt="topright arrow" />
-        </button>
-      </Stack>
-    </Grid>
+      </div>
+      <p className="font-semibold text-white text-[17px]">
+        {isAdminHome ? "View Company Information" : "Invest in this Stock 🚀"}
+      </p>
+    </div>
   );
 });
 
