@@ -56,7 +56,7 @@ const Home = () => {
   return (
     <main className="w-screen h-screen overflow-hidden">
       <Navbar />
-      <div className="mt-[16.5px] container bg-white rounded-xl flex justify-between items-center mx-auto w-full pt-[18px] pb-[9px] px-[56px]">
+      <div className="mt-[16.5px] container bg-white rounded-xl flex justify-between items-center mx-auto w-full pt-[18px] pb-[9px] px-[56px] relative z-0">
         {tabs.map((label, index) => (
           <div
             className={`flex flex-col justify-center items-center relative h-full w-[108px]`}

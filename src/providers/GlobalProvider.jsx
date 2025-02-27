@@ -56,6 +56,14 @@ export const GlobalProvider = ({ children }) => {
       sessionStorage.getItem("postBuyPosition")
     );
     companyPostBuy && setPostBuyPosition(companyPostBuy);
+
+    const companyPostSell = JSON.parse(
+      sessionStorage.getItem("postSellPosition")
+    );
+    companyPostSell && setPostSellPosition(companyPostSell);
+
+    const savedState = sessionStorage.getItem("enabledTabs");
+    setEnabledTabs(savedState ? JSON.parse(savedState) : 0);
   }, []);
 
   const fetchPostBuyPosition = async () => {
@@ -134,6 +142,11 @@ export const GlobalProvider = ({ children }) => {
   useEffect(() => {
     fetchPostSellPosition();
   }, [companySold]);
+
+  useEffect(() => {
+    const savedState = sessionStorage.getItem("enabledTabs");
+    setEnabledTabs(savedState ? JSON.parse(savedState) : 0);
+  }, [user]);
 
   return (
     <GlobalContext.Provider
