@@ -133,7 +133,7 @@ const SellStockWindow = ({ company }) => {
             <div className="flex flex-row justify-between items-center">
               {" "}
               <input
-                value={quantity * company.price}
+                value={(quantity * company.price).toLocaleString()}
                 className="bg-white-100 text-lg w-[50%]"
                 disabled
               />
