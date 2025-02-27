@@ -7,6 +7,8 @@ import { userWithdrawService } from "../services/userWithdraw.service";
 import WithdrawTable from "../components/WithdrawTable";
 import Loading from "../components/Loading";
 import SuccessfulWithdrawModal from "../components/SuccessfulWithdrawModal";
+import { useGlobal } from "@/providers/GlobalProvider";
+import CustomSlider from "@/components/CustomSlider";
 
 const columns = [
   {
@@ -37,41 +39,9 @@ const columns = [
   },
 ];
 
-// Custom Styled Slider
-const CustomSlider = styled(Slider)({
-  color: "#6143F0", // Purple color for filled area
-  width: "100%",
-  height: "50%",
-  borderRadius: 4,
-  "& .MuiSlider-track": {
-    backgroundColor: "#6143F0", // Purple color for the filled track
-  },
-  "& .MuiSlider-rail": {
-    background: "#3D424A",
-    opacity: 0.1,
-  },
-  "& .MuiSlider-thumb": {
-    width: 20,
-    height: 22,
-    borderRadius: 4,
-    backgroundColor: "#fff",
-    border: "2px solid #6143F0",
-    transition: "width 0.3s, height 0.3s",
-  },
-  "& .MuiSlider-thumb:hover": {
-    boxShadow: "0px 0px 0px 8px rgba(156, 39, 176, 0.16)", // Hover effect
-  },
-  // Media query for specific resolution
-  "@media (min-width: 1440px) and (min-height: 1028px)": {
-    "& .MuiSlider-thumb": {
-      width: 32,
-      height: 38,
-    },
-  },
-});
-
-const WithdrawSection = ({ navigationHandle }) => {
+const WithdrawSection = () => {
   const { user } = useAuth();
+  const { handleNav } = useGlobal();
   const [withdrawListLoading, setWithdrawListLoading] = useState(false);
   const [withdrawLoading, setWithdrawLoading] = useState(false);
   const [withdrawQuantity, setWithdrawQuantity] = useState(0);
@@ -153,10 +123,8 @@ const WithdrawSection = ({ navigationHandle }) => {
           <div className="flex justify-center items-center pt-5">
             <Price
               price={adjustBalance(user.wallet_balance)}
-              styles={
-                "absolute -top-1 -right-5 w-5 big:w-8 big:-top-3 big:-right-8"
-              }
-              textStyles={"big:text-5xl text-4xl"}
+              imgStyles={"w-5"}
+              textStyles={"text-4xl gap-1"}
             />
           </div>
           <div className="flex justify-center">
@@ -167,20 +135,20 @@ const WithdrawSection = ({ navigationHandle }) => {
             />
           </div>
         </div>
-        <div className="rounded-2xl bg-white p-2 pt-8 h-fit w-fit flex flex-col">
+        <div className="rounded-2xl bg-white p-2 pt-6 h-fit w-fit flex flex-col">
           <div className="flex justify-center items-center">
             <Price
               price={withdrawQuantity}
-              textStyles={"big:text-6xl text-5xl"}
-              styles={"absolute -top-2 big:-right-9 big:w-8 w-7 -right-7"}
+              imgStyles={"w-6"}
+              textStyles={"text-5xl gap-1"}
             />
           </div>
           <div className="flex flex-col justify-center items-center">
-            <p className="text-white-300 big:text-sm pt-4 pb-3 text-center text-[10px] big:pt-8">
+            <p className="text-white-300 big:text-sm pt-2 pb-3 text-center text-[10px] big:pt-8">
               Move the Below slider to select a specific amount you want to
               withdraw
             </p>
-            <div className="w-full h-full pr-8 pt-0 pb-0 pl-10 mt-3 big:h-[80px]">
+            <div className="w-full pr-8 pt-0 pb-0 pl-10 mt-2">
               <CustomSlider
                 value={withdrawQuantity}
                 onChange={handleChange}
@@ -189,7 +157,7 @@ const WithdrawSection = ({ navigationHandle }) => {
               />
             </div>
           </div>
-          <div className="flex items-center justify-center pb-2 pr-4 pl-4 mt-6">
+          <div className="flex items-center justify-center pb-2 pr-4 pl-4 mt-2">
             <button
               className="w-full flex items-center justify-center flex-row gap-2 bg-purple rounded-full text-white big:text-[18px] text-[10px] p-2"
               onClick={handleWithdraw}
@@ -235,7 +203,7 @@ const WithdrawSection = ({ navigationHandle }) => {
       <SuccessfulWithdrawModal
         open={open}
         handleClose={handleClose}
-        handleNavigate={navigationHandle}
+        handleNavigate={handleNav}
       />
     </Stack>
   );

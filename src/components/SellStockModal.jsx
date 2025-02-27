@@ -10,7 +10,6 @@ import SellStockWindow from "./SellStockWindow";
 import { useAuth } from "../providers/AuthProvider";
 
 const CompanyCard = memo(({ stock, handleClick, isSelling, selected }) => {
-  const { backendUrl } = useAuth();
   return (
     <Grid2
       key={stock.id}

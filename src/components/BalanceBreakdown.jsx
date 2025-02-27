@@ -58,11 +58,11 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
   }, [user]);
 
   return (
-    <div className="relative p-4 big:p-5">
+    <div className="relative p-4">
       <Stack direction={"column"}>
-        <h1 className="text-[37px] text-white big:text-5xl">Total Balance</h1>
+        <h1 className="text-[34px] font-medium text-white">Total Balance</h1>
         <div className="flex flex-row items-center gap-1">
-          <p className="text-white text-[35px] big:text-[44px]">
+          <p className="text-white text-[33px] font-medium">
             {user.getTotalBalance().toFixed(2)}
           </p>
 
@@ -93,37 +93,28 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
         </div>
       </Stack>
       {added_amount >= 0 ? (
-        <p className="text-[#31CFCB] pt-1 text-sm big:text-[16px]">
-          You have added{" "}
+        <div className="text-[#31CFCB] pt-1 text-[13px] font-medium flex gap-1">
+          <span>You have added</span>
           <Price
             price={added_amount.toFixed(2)}
-            styles={"absolute -right-2 top-0 w-3"}
-            textStyles={"text-sm big:text-[16px]"}
-            type="2"
-            font="normal"
-          />{" "}
-          &nbsp;&nbsp;&nbsp;to your portfolio{" "}
-        </p>
+            imgStyles={"w-[10px]"}
+            textStyles={`text-[13px] font-medium`}
+          />
+          <span>from your portfolio</span>
+        </div>
       ) : (
-        <p className="text-[#31CFCB] pt-1 text-sm big:text-[16px]">
-          You have lost{" "}
+        <div className="text-[#31CFCB] pt-1 text-[13px] font-medium flex gap-1">
+          <span>You have lost</span>
           <Price
             price={Math.abs(added_amount).toFixed(2)}
-            styles={
-              "absolute -right-2 top-0 w-3 big:w-3.5 big:-top-1 big:-right-3"
-            }
-            textStyles={"text-sm big:text-[16px]"}
-            type="2"
-            font="normal"
-          />{" "}
-          &nbsp;&nbsp;&nbsp;from your portfolio{" "}
-        </p>
+            imgStyles={"w-[10px]"}
+            textStyles={`text-[13px] font-medium`}
+            type={"2"}
+          />
+          <span>from your portfolio</span>
+        </div>
       )}
-      <Stack
-        direction={"column"}
-        spacing={5}
-        className="pt-5 big:flex big:space-y-6"
-      >
+      <Stack direction={"column"} spacing={3} className="pt-5">
         <div className="space-y-1 big:space-y-3">
           <h6 className="text-[#31CFCB] big:text-xl">Available Cash Balance</h6>
           <div className="flex items-start gap-1 w-full relative">
@@ -179,13 +170,13 @@ const BalanceBreakdown = ({ withdrawHandle }) => {
         <img
           src="/images/bag_of_money.svg"
           alt="Bag of Money"
-          className="absolute -right-[8%] top-[26%] big:-right-[9%] w-[220px] big:w-[300px]"
+          className="absolute -right-[7.5%] top-[20%] big:-right-[9%] w-[220px] big:w-[300px]"
         />
       </Stack>
       <Button
         name="Withdraw"
-        onClick={withdrawHandle}
-        otherClasses="bg-[#31CFCB] text-white w-full my-5 big:text-lg flex items-center justify-center big:mt-16 mt-10"
+        onClick={() => withdrawHandle(true, 2)}
+        otherClasses="bg-[#31CFCB] text-white w-full big:text-lg flex items-center justify-center mt-10"
       />
     </div>
   );

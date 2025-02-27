@@ -1,6 +1,5 @@
 import React, { memo } from "react";
 import Loading from "../components/Loading";
-import Grid2 from "@mui/material/Grid2";
 import CompanyCard from "./CompanyCard";
 import { useLocation } from "react-router";
 
@@ -20,7 +19,7 @@ const CompanyList = memo(
               isAdminHome ? "h-[calc(100vh-260px)]" : "max-h-[64vh]"
             } big:max-h-[73vh]`}
           >
-            <Grid2 container rowSpacing={"10px"} columnSpacing={"10px"}>
+            <div className="pl-[36px] pr-[32px] grid 2xl:grid-cols-4 grid-cols-3 gap-[28px] pb-[21px] h-[calc(100vh-290px)] overflow-y-scroll custom-scrollbar">
               {filteredcompanies.length > 0 ? (
                 filteredcompanies.map((company) => (
                   <CompanyCard
@@ -34,7 +33,7 @@ const CompanyList = memo(
                   <p className="text-xl">No companies available.</p>
                 </div>
               )}
-            </Grid2>
+            </div>
           </div>
         )}
       </div>

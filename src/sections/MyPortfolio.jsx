@@ -7,9 +7,11 @@ import ProfitMade from "../components/ProfitMade";
 import Price from "../components/Price";
 import UserProfileInfo from "../components/UserProfileInfo";
 import BalanceBreakdown from "../components/BalanceBreakdown";
+import { useGlobal } from "@/providers/GlobalProvider";
 
-const MyPortfolio = ({ withdrawHandle }) => {
+const MyPortfolio = () => {
   const { user } = useAuth();
+  const { handleNav } = useGlobal();
 
   const [userStocks, setUserStocks] = useState([]);
   const [successRate, setSuccessRate] = useState(0);
@@ -41,25 +43,22 @@ const MyPortfolio = ({ withdrawHandle }) => {
   }, [user]);
 
   return (
-    <section className="flex flex-row h-full pl-5 w-full gap-5">
-      <div className="w-[36.1%] bg-purple rounded-2xl">
-        <BalanceBreakdown withdrawHandle={withdrawHandle} />
+    <section className="flex flex-row gap-5">
+      <div className="w-[450px] bg-purple rounded-2xl">
+        <BalanceBreakdown withdrawHandle={handleNav} />
       </div>
 
-      <div className="w-[62%] h-full space-y-4">
-        <div className="w-full h-[53%] bg-white rounded-2xl">
+      <div className="space-y-4 flex-1">
+        <div className=" bg-white rounded-2xl">
           <StocksBought
             userStocks={userStocks}
             setNumberOfAssets={setNumberOfAssets}
-            withdrawHandle={withdrawHandle}
+            withdrawHandle={handleNav}
           />
         </div>
 
-        <div className="w-full h-[44%] bg-white rounded-2xl">
-          <UserProfileInfo
-            successRate={successRate}
-            numberOfAssets={numberOfAssets}
-          />
+        <div className="bg-white rounded-2xl">
+          <UserProfileInfo />
         </div>
       </div>
 

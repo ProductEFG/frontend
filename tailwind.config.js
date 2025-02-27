@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
+  darkMode: ["class"],
   content: [
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
@@ -7,26 +8,59 @@ export default {
   ],
   theme: {
     extend: {
+      container: {
+        center: true,
+        screens: {
+          sm: "540px",
+          md: "720px",
+          lg: "960px",
+          xl: "1150px",
+          "2xl": "1320px",
+        },
+      },
       colors: {
-        p1: "#F8F9FA",
-        p2: "#3C52D9",
-        p3: "#C8EA80",
-        p4: "#EAEDFF",
-        p5: "#C4CBF5",
-        s1: "#080D27",
-        s2: "#0C1838",
-        s3: "#334679",
-        s4: "#1959AD",
-        s5: "#263466",
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
         black: {
-          DEFAULT: "#000000",
           100: "#05091D",
+          DEFAULT: "#000000",
         },
         white: {
-          DEFAULT: "#FFFFFF",
           100: "#F8F9FA",
           200: "#9AA0A6",
           300: "#6E7191",
+          DEFAULT: "#FFFFFF",
         },
         purple: {
           DEFAULT: "#6143F0",
@@ -41,11 +75,22 @@ export default {
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
+        onest: ["Onest", "sans-serif"],
       },
       transitionProperty: {
         borderColor: "border-color",
       },
       spacing: {
+        22: "88px",
+        100: "100px",
+        330: "330px",
+        388: "388px",
+        400: "400px",
+        440: "440px",
+        512: "512px",
+        640: "640px",
+        960: "960px",
+        1230: "1230px",
         "1/5": "20%",
         "2/5": "40%",
         "3/5": "60%",
@@ -58,16 +103,6 @@ export default {
         "15/20": "75%",
         "17/20": "85%",
         "19/20": "95%",
-        22: "88px",
-        100: "100px",
-        512: "512px",
-        330: "330px",
-        388: "388px",
-        400: "400px",
-        440: "440px",
-        640: "640px",
-        960: "960px",
-        1230: "1230px",
       },
       zIndex: {
         1: "1",
@@ -77,27 +112,54 @@ export default {
       lineHeight: {
         12: "48px",
       },
-      borderRadius: {
-        14: "14px",
-        20: "20px",
-        40: "40px",
-        half: "50%",
-        "7xl": "40px",
-      },
       flex: {
         50: "0 0 50%",
-        320: "1px 0 320px",
-        300: "0 0 300px",
-        540: "0 0 540px",
-        280: "0 0 280px",
-        256: "0 0 256px",
         100: "0 0 100%",
+        256: "0 0 256px",
+        280: "0 0 280px",
+        300: "0 0 300px",
+        320: "1px 0 320px",
+        540: "0 0 540px",
       },
       screens: {
-        big: { raw: "(min-width: 1440px) and (max-height: 1028px)" },
-        normal: { raw: "(min-width: 1280px) and (max-height: 750px)" },
+        big: {
+          raw: "(min-width: 1440px) and (max-height: 1028px)",
+        },
+        normal: {
+          raw: "(min-width: 1280px) and (max-height: 750px)",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius)",
+        md: "calc(var(--radius) - 2px)",
+        sm: "calc(var(--radius) - 4px)",
+      },
+      keyframes: {
+        "accordion-down": {
+          from: {
+            height: "0",
+          },
+          to: {
+            height: "var(--radix-accordion-content-height)",
+          },
+        },
+        "accordion-up": {
+          from: {
+            height: "var(--radix-accordion-content-height)",
+          },
+          to: {
+            height: "0",
+          },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("tailwind-scrollbar")({ nocompatible: true }),
+  ],
 };

@@ -5,13 +5,14 @@ import { useAuth } from "../providers/AuthProvider.jsx";
 import Button from "../components/Button.jsx";
 import { userStocksService } from "../services/userStocks.service.js";
 import UserEntity from "../entities/userEntity.js";
+import { useGlobal } from "@/providers/GlobalProvider";
 
-const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
-  const { user, setUser, backendUrl } = useAuth();
+const BuyStockWindow = ({ company, setCompanyBought }) => {
+  const { user, setUser } = useAuth();
+  const { handleNav } = useGlobal();
 
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [userStocks, setUserStocks] = useState([]);
   const [sharesQuantity, setSharesQuantity] = useState(0);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -47,23 +48,16 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
       sessionStorage.setItem("token", JSON.stringify(updatedUser));
       setSuccess("Stocks have been bought successfully");
 
-      console.log(company.current_return);
-
-      const companyBought = {
-        companyId: company._id,
-        companyLogo: company.logo,
-        companyName: company.name,
-        companyReturn: company.current_return,
-        invested_amount: quantity * company.current_price,
-        profit_made: quantity * company.current_change,
-        visitors: company.current_visitors,
+      const newCompany = {
+        ...company,
+        quantity,
       };
 
-      sessionStorage.setItem("companyBought", JSON.stringify(companyBought));
-      setCompanyBought(companyBought);
+      sessionStorage.setItem("companyBought", JSON.stringify(newCompany));
+      setCompanyBought(newCompany);
       fetchUserStocks();
       setError("");
-      ReturnsMadeHandle();
+      handleNav();
     } catch (error) {
       setError(error.message);
     } finally {
@@ -78,8 +72,6 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
         user._id,
         company._id
       );
-
-      setUserStocks(userStocks);
 
       let userStocksQuantity = 0;
       userStocks.forEach((stock) => {
@@ -101,7 +93,6 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
     company && fetchUserStocks();
 
     return () => {
-      setUserStocks([]);
       controller.abort();
     };
   }, [company]);
@@ -117,39 +108,49 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
           Buy {company.acronym}{" "}
           <img src={`${company.logo}`} width={30} height={30} />
         </h3>
-        <p className="flex flex-row items-center text-xs">
-          <img src="/images/stock_arrow.svg" alt="Stock" /> 1 ={" "}
+        <div className="flex flex-row items-center text-sm gap-1">
+          <img src="/images/stock_arrow.svg" alt="Stock" className="w-3" />
+          <span>1</span> <span>=</span>
           <Price
             price={company.current_price}
-            styles={"absolute -right-2.5 top-0 w-2"}
-            textStyles="pl-2"
+            imgStyles={"w-2"}
+            textStyles={"text-xs text-black"}
           />
-        </p>
+        </div>
       </div>
       <div className=" flex flex-col gap-3 relative">
-        <div className="h-[97px] bg-white-100 rounded-2xl">
+        <div className="bg-white-100 rounded-2xl">
           <Stack spacing={1} className="p-3 pl-4">
             <div>
               <h3 className="text-xs">Current Ownership</h3>
               <p className="text-xs text-white-200">{sharesQuantity} Shares</p>
             </div>
             <div className="flex flex-row justify-between items-center">
-              {" "}
-              <input
-                type="number"
-                value={quantity}
-                min={1}
-                onChange={(e) => {
-                  if (e.target.value < 0) {
-                    setError("");
-                    setQuantity(1);
-                  } else {
-                    setError("");
-                    setQuantity(e.target.value);
+              <div className="flex justify-between items-center w-[50%] mt-[18px]">
+                <button
+                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
+                  onClick={() =>
+                    setQuantity((prev) =>
+                      (prev + 1) * company.current_price > user.wallet_balance
+                        ? prev
+                        : ++prev
+                    )
                   }
-                }}
-                className="bg-white-100 text-lg w-[40%]"
-              />
+                >
+                  +
+                </button>
+                <span className="font-semibold">{quantity}</span>
+                <button
+                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
+                  onClick={() =>
+                    setQuantity((prev) => {
+                      return prev > 1 ? --prev : 1;
+                    })
+                  }
+                >
+                  -
+                </button>
+              </div>
               <p className="text-white-200 tracking-wider">Shares</p>
             </div>
           </Stack>
@@ -161,7 +162,7 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
               {user && (
                 <Price
                   price={user.wallet_balance.toLocaleString()}
-                  styles="absolute -right-3.5 -top-0.5 w-3"
+                  imgStyles={"w-3 ml-1"}
                   textStyles={"text-white-200 text-xs"}
                 />
               )}
@@ -169,7 +170,7 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
             <div className="flex flex-row justify-between items-center">
               {" "}
               <input
-                value={quantity * company.current_price}
+                value={(quantity * company.current_price).toLocaleString(2)}
                 className="bg-white-100 text-lg w-[50%]"
                 disabled
               />
@@ -182,7 +183,7 @@ const BuyStockWindow = ({ company, setCompanyBought, ReturnsMadeHandle }) => {
           alt="Trade Between"
           width={42}
           height={42}
-          className="absolute left-[45%] top-[40%]"
+          className="absolute right-[30%] top-[45%]"
         />
         {error.length > 0 && (
           <p className="text-red-600 text-center text-sm">{error}</p>

@@ -5,57 +5,7 @@ import Button from "../components/Button";
 import SellStockModal from "./SellStockModal";
 import { useAuth } from "../providers/AuthProvider";
 import Return from "./Return";
-
-const Images = ({ image1, image2, image3, image4 }) => {
-  const { backendUrl } = useAuth();
-  return (
-    <div className="flex justify-center items-center relative w-[150px]">
-      {/* main Image (Highest Percentage) */}
-      <div
-        className="bg-white w-[87px] h-[87px] rounded-full flex justify-center items-center overflow-hidden p-2 z-3"
-        style={{
-          boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <img src={`${image1}`} className="w-full h-full object-fit" />
-      </div>
-
-      {/* 2nd Image (2nd Highest Percentage) */}
-      {image2 && (
-        <div
-          className="bg-white w-[74px] h-[74px] rounded-full flex justify-center items-center overflow-hidden p-2 absolute -right-7 z-2"
-          style={{
-            boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <img src={`${image2}`} className="w-full h-full object-fit" />
-        </div>
-      )}
-      {/* 3rd Image (3rd Highest Percentage) */}
-      {image3 && (
-        <div
-          className="bg-white w-[57px] h-[57px] rounded-full flex justify-center items-center overflow-hidden p-2 absolute -bottom-9 right-3 z-1"
-          style={{
-            boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <img src={`${image3}`} className="w-full h-full object-fit" />
-        </div>
-      )}
-      {/* 4th Image (4th Highest Percentage) */}
-      {image4 && (
-        <div
-          className="bg-white w-[57px] h-[57px] rounded-full flex justify-center items-center overflow-hidden p-2 absolute -top-5 left-1 z-1"
-          style={{
-            boxShadow: "0px 2px 20px rgba(0, 0, 0, 0.1)",
-          }}
-        >
-          <img src={`${image4}`} className="w-full h-full object-fit" />
-        </div>
-      )}
-    </div>
-  );
-};
+import CustomPieChart from "./CustomPieChart";
 
 const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
   const { user } = useAuth();
@@ -63,6 +13,8 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
   const [totalReturn, setTotalReturn] = useState(0);
   const [companySpendDetails, setCompanySpendDetails] = useState([]);
   const [open, setOpen] = useState(false);
+
+  const [chartData, setChartData] = useState(null);
 
   const handleOpen = async () => {
     setOpen(true);
@@ -115,9 +67,9 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
             id: id,
             logo: companyLogo,
             acronym: companyAcronym,
-            returns: stock.companyId.current_return,
             visitors: stock.companyId.current_visitors,
-            price: stock.companyId.temp_price,
+            price: stock.companyId.current_price,
+            temp_price: stock.companyId.temp_price,
             return: stock.companyId.current_return,
             value: stockValue,
             quantity: stock.quantity,
@@ -137,17 +89,24 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
           company: companyName,
           logo: data.logo,
           acronym: data.acronym,
-          returns: data.returns,
           visitors: data.visitors,
           price: data.price,
+          temp_price: data.temp_price,
           return: data.return,
           totalSpent: data.value,
           quantity: data.quantity,
-          percentage: ((data.value / totalStockValue) * 100).toFixed(2),
+          percentage: ((data.value / totalStockValue) * 100).toFixed(0),
           color: getRandomColor(),
         }))
         .sort((a, b) => b.percentage - a.percentage);
 
+      const chartData = companyDetails.map((entry) => ({
+        name: entry.company,
+        percentage: parseInt(entry.percentage),
+        fill: entry.color,
+      }));
+
+      setChartData(chartData);
       setNumberOfAssets(companyDetails.length);
       setCompanySpendDetails(companyDetails);
     } catch (error) {
@@ -166,6 +125,7 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
       controller.abort();
     };
   }, [userStocks, user]);
+
   return (
     <div className="p-4">
       <div className="flex flex-row justify-between items-center">
@@ -174,16 +134,18 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
             Current Stock Value
           </h1>
           <div className={`relative w-[60%]`}>
-            <div className="flex flex-row gap-4 items-start">
+            <div className="flex flex-row gap-1 items-start">
               <Price
                 price={totalValue.toLocaleString()}
-                styles="absolute -right-4 -top-0.5 w-4"
+                imgStyles={"w-4"}
                 textStyles="text-2xl"
               />
               <div className="">
                 <Return
                   type={`${totalReturn >= 0 ? "positive" : "negative"}`}
                   number={totalReturn ? totalReturn.toFixed(1) : 0}
+                  textStyles="text-sm"
+                  imgStyles={"w-4"}
                 />
               </div>
             </div>
@@ -202,47 +164,29 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
       </div>
       {companySpendDetails.length > 0 ? (
         <div className="flex flex-row w-full justify-between">
-          <div className="relative pt-16">
-            <Images
-              image1={companySpendDetails[0]?.logo}
-              image2={companySpendDetails[1]?.logo}
-              image3={companySpendDetails[2]?.logo}
-              image4={companySpendDetails[3]?.logo}
-            />
+          <div className="flex justify-center items-center w-fit">
+            {chartData && <CustomPieChart data={chartData} />}
           </div>
-          <div className="flex flex-col gap-0 items-center w-full mt-4 ml-10">
-            <h3 className="text-center font-semibold pb-3">Share Breakdown</h3>
-            <div className="w-[265px] h-4 flex overflow-hidden rounded-full">
-              {companySpendDetails.map((company) => (
-                <div
-                  key={"color" + company.company}
-                  style={{
-                    width: `${company.percentage}%`,
-                    backgroundColor: `${company.color}`,
-                  }}
-                  className="h-full rounded-full mr-0.5 ml-0.5"
-                  title={`${company.company}: ${company.percentage}%`}
-                />
-              ))}
-            </div>
-            <div className="flex flex-row justify-between gap-2">
-              <div className="flex flex-col overflow-y-auto text-sm overflow-x-hidden">
+          <div className="flex flex-col gap-0 items-center w-full mt-2 ml-10">
+            <h3 className="text-center font-semibold mb-4">Share Breakdown</h3>
+            <div className="flex flex-row justify-between gap-4">
+              <div className="flex flex-col overflow-y-auto text-sm overflow-x-hidden gap-6">
                 {companySpendDetails.slice(0, 3).map((company) => (
                   <div
                     key={"text" + company.company}
-                    className="flex flex-row p-2 gap-2 pt-4 items-center"
+                    className="flex flex-row gap-2 items-center"
                   >
                     <div
                       className={`w-2 h-2 rounded-full`}
                       style={{ backgroundColor: `${company.color}` }}
                     />
                     <p
-                      className="text-[#A0A3BD] w-[35%] overflow-hidden"
+                      className="text-[#A0A3BD] w-[30%] overflow-hidden"
                       style={{
                         display: "flex",
                         alignItems: "center",
                         gap: "8px",
-                        maxWidth: "100px",
+                        maxWidth: "50px",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -254,33 +198,39 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
                         {company.company}
                       </span>
                     </p>
+                    <div className="w-[30px] h-[30px] rounded-full bg-[#F8F9FA] flex justify-center items-center">
+                      <img
+                        src={company.logo}
+                        className="w-full h-auto max-h-full object-contain"
+                      />
+                    </div>
                     <Price
                       price={company.totalSpent.toLocaleString()}
-                      styles={"absolute -right-3.5 -top-0.5 w-3"}
+                      textStyles={"w-[25%]"}
                     />
-                    <p className="w-[20%] pl-2 font-semibold">
+                    <p className="font-medium text-sm">
                       ({company.percentage.toLocaleString()}%)
                     </p>
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col overflow-y-auto text-sm overflow-x-hidden">
+              <div className="flex flex-col overflow-y-auto text-sm overflow-x-hidden gap-6">
                 {companySpendDetails.slice(3, 6).map((company) => (
                   <div
                     key={"text" + company.company}
-                    className="flex flex-row p-2 gap-2 pt-4 items-center"
+                    className="flex flex-row gap-3 items-center"
                   >
                     <div
                       className={`w-2 h-2 rounded-full`}
                       style={{ backgroundColor: `${company.color}` }}
                     />
                     <p
-                      className="text-[#A0A3BD] w-[35%] overflow-hidden"
+                      className="text-[#A0A3BD] w-[30%] overflow-hidden"
                       style={{
                         display: "flex",
                         alignItems: "center",
                         gap: "8px",
-                        maxWidth: "100px",
+                        maxWidth: "50px",
                         whiteSpace: "nowrap",
                         overflow: "hidden",
                         textOverflow: "ellipsis",
@@ -292,11 +242,17 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
                         {company.company}
                       </span>
                     </p>
+                    <div className="w-[30px] h-[30px] rounded-full bg-[#F8F9FA] flex justify-center items-center">
+                      <img
+                        src={company.logo}
+                        className="w-full h-auto max-h-full object-contain"
+                      />
+                    </div>
                     <Price
                       price={company.totalSpent.toLocaleString()}
-                      styles={"absolute -right-3.5 -top-0.5 w-3"}
+                      textStyles={"w-[25%]"}
                     />
-                    <p className="w-[20%] pl-2 font-semibold">
+                    <p className="font-medium text-sm">
                       ({company.percentage.toLocaleString()}%)
                     </p>
                   </div>
