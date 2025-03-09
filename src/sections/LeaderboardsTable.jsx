@@ -3,7 +3,7 @@ import { ArrowRight } from "lucide-react";
 import React from "react";
 
 const LeaderboardsTable = () => {
-  const { handleNav } = useGlobal();
+  const { handleNav, enabledTabs } = useGlobal();
   return (
     <div className="w-full bg-white rounded-xl p-5">
       <div className="flex justify-between border-b border-gray-300">
@@ -22,13 +22,25 @@ const LeaderboardsTable = () => {
             </p>
           </div>
         </div>
-        <button
-          className="text-[20px] text-purple flex gap-2 items-center justify-center"
-          onClick={handleNav}
-        >
-          Go to Market Insights
-          <ArrowRight />
-        </button>
+        <div className="flex flex-col gap-3 justify-center items-end">
+          <button
+            className="text-[20px] text-purple flex gap-2 items-center justify-center"
+            onClick={() => {
+              const moveNumber = 3 - enabledTabs;
+              handleNav(true, moveNumber);
+            }}
+          >
+            Go to Portfolio
+            <ArrowRight />
+          </button>
+          <button
+            className="text-[20px] text-purple flex gap-2 items-center justify-center"
+            onClick={handleNav}
+          >
+            Go to Market Insights
+            <ArrowRight />
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col justify-center items-center">

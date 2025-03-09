@@ -5,6 +5,7 @@ class UserEntity {
     last_name,
     date_of_birth,
     username,
+    password,
     avatar,
     wallet_balance,
     stock_balance,
@@ -20,6 +21,7 @@ class UserEntity {
     this.last_name = last_name;
     this.date_of_birth = date_of_birth;
     this.username = username;
+    this.password = password;
     this.avatar = avatar;
     this.wallet_balance = wallet_balance;
     this.stock_balance = stock_balance;

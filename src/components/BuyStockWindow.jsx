@@ -130,6 +130,17 @@ const BuyStockWindow = ({ company, setCompanyBought }) => {
                 <button
                   className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
                   onClick={() =>
+                    setQuantity((prev) => {
+                      return prev > 1 ? --prev : 1;
+                    })
+                  }
+                >
+                  -
+                </button>
+                <span className="font-semibold">{quantity}</span>
+                <button
+                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
+                  onClick={() =>
                     setQuantity((prev) =>
                       (prev + 1) * company.current_price > user.wallet_balance
                         ? prev
@@ -138,17 +149,6 @@ const BuyStockWindow = ({ company, setCompanyBought }) => {
                   }
                 >
                   +
-                </button>
-                <span className="font-semibold">{quantity}</span>
-                <button
-                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
-                  onClick={() =>
-                    setQuantity((prev) => {
-                      return prev > 1 ? --prev : 1;
-                    })
-                  }
-                >
-                  -
                 </button>
               </div>
               <p className="text-white-200 tracking-wider">Shares</p>

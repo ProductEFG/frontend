@@ -1,6 +1,3 @@
-import ProfitProjection from "@/components/Returns Made/ProfitProjection";
-import BuyReturnsTradePerformance from "@/components/Returns Made/BuyReturnsTradePerformance";
-import BuyReturnsCurrentPosition from "@/components/Returns Made/BuyReturnsCurrentPosition";
 import ProfitAchieved from "@/components/Returns Made/ProfitAchieved";
 import ReturnsMadeSlide from "@/components/ReturnsMadeSlide";
 import {

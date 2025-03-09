@@ -4,10 +4,18 @@ import Price from "../Price";
 import Loading from "../Loading";
 import FormField from "../FormField";
 import { userService } from "../../services/user.service.js";
+import { Check, Clipboard } from "lucide-react";
 
 const UserProfileModal = ({ open, handleClose, selectedUser }) => {
   const [addedBalance, setAddedBalance] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [copiedField, setCopiedField] = useState(null);
+
+  const handleCopy = (text, field) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000); // Reset after 2 seconds
+  };
 
   const handleAddFunds = async () => {
     setLoading(true);
@@ -86,7 +94,52 @@ const UserProfileModal = ({ open, handleClose, selectedUser }) => {
               Joined {selectedUser.getCreatedDate()}
             </p>
           </div>
-          <div className="flex flex-row justify-between items-center w-[90%] pt-5">
+          <div className="flex gap-5 justify-center items-center w-[90%]">
+            {/* Username Field */}
+            <div className="flex flex-row gap-2 border border-gray-400 px-3 py-2 rounded-lg w-1/2 items-center justify-between">
+              <div className="flex gap-2">
+                <p className="text-gray-600 font-semibold">Username:</p>
+                <p className="text-black font-medium">
+                  {selectedUser.username}
+                </p>
+              </div>
+              <button
+                onClick={() => handleCopy(selectedUser.username, "username")}
+              >
+                {copiedField === "username" ? (
+                  <Check size={18} className="text-green-500" />
+                ) : (
+                  <Clipboard
+                    size={18}
+                    className="text-gray-500 hover:text-black"
+                  />
+                )}
+              </button>
+            </div>
+
+            {/* Password Field (Hidden for Security) */}
+            <div className="flex flex-row gap-2 border border-gray-400 px-3 py-2 rounded-lg w-1/2 items-center justify-between">
+              <div className="flex gap-2">
+                <p className="text-gray-600 font-semibold">Password:</p>
+                <p className="text-black font-medium tracking-widest">
+                  {selectedUser.password}
+                </p>
+              </div>
+              <button
+                onClick={() => handleCopy(selectedUser.password, "password")}
+              >
+                {copiedField === "password" ? (
+                  <Check size={18} className="text-green-500" />
+                ) : (
+                  <Clipboard
+                    size={18}
+                    className="text-gray-500 hover:text-black"
+                  />
+                )}
+              </button>
+            </div>
+          </div>
+          <div className="flex flex-row justify-between items-center w-[90%]">
             <div className="p-5 border border-gray-400 rounded-xl flex flex-row gap-3 justify-center items-center">
               <img src="/images/total_balance.svg" />
               <div className="flex flex-col gap-2 pr-2">

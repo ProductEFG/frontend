@@ -96,23 +96,23 @@ const SellStockWindow = ({ company }) => {
                 <button
                   className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
                   onClick={() =>
-                    setQuantity((prev) =>
-                      prev + 1 > company.quantity ? prev : ++prev
-                    )
-                  }
-                >
-                  +
-                </button>
-                <span className="font-semibold">{quantity}</span>
-                <button
-                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
-                  onClick={() =>
                     setQuantity((prev) => {
                       return prev > 1 ? --prev : 1;
                     })
                   }
                 >
                   -
+                </button>
+                <span className="font-semibold">{quantity}</span>
+                <button
+                  className="bg-[#213536] rounded-lg px-2 py-[2px] text-white font-extralight text-xl"
+                  onClick={() =>
+                    setQuantity((prev) =>
+                      prev + 1 > company.quantity ? prev : ++prev
+                    )
+                  }
+                >
+                  +
                 </button>
               </div>
               <p className="text-white-200 tracking-wider">Shares</p>

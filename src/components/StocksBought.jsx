@@ -6,9 +6,11 @@ import SellStockModal from "./SellStockModal";
 import { useAuth } from "../providers/AuthProvider";
 import Return from "./Return";
 import CustomPieChart from "./CustomPieChart";
+import { useGlobal } from "@/providers/GlobalProvider";
 
 const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
   const { user } = useAuth();
+  const { enabledTabs, handleNav } = useGlobal();
   const [totalValue, setTotalValue] = useState(0);
   const [totalReturn, setTotalReturn] = useState(0);
   const [companySpendDetails, setCompanySpendDetails] = useState([]);
@@ -151,16 +153,36 @@ const StocksBought = ({ userStocks, setNumberOfAssets, withdrawHandle }) => {
             </div>
           </div>
         </div>
-        <Button
-          name={
-            <div className="flex flex-row gap-2 justify-center items-center">
-              Sell Stock{" "}
-              <img src="/images/back_arrow.svg" alt="Next Arrow" width={19} />
-            </div>
-          }
-          onClick={handleOpen}
-          otherClasses="bg-[#31CFCB] text-white w-[260px] font-light text-[16px]"
-        />
+        <div className="flex flex-row gap-4 justify-center items-center">
+          <Button
+            name={
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <img
+                  src="/images/back_arrow.svg"
+                  alt="Next Arrow"
+                  width={19}
+                  className="transform rotate-180"
+                />
+                Invest
+              </div>
+            }
+            onClick={() => {
+              const moveNumber = 1 - enabledTabs;
+              handleNav(true, moveNumber);
+            }}
+            otherClasses="bg-[#31CFCB] text-white px-6 font-light text-[16px]"
+          />
+          <Button
+            name={
+              <div className="flex flex-row gap-2 justify-center items-center">
+                Sell Stock{" "}
+                <img src="/images/back_arrow.svg" alt="Next Arrow" width={19} />
+              </div>
+            }
+            onClick={handleOpen}
+            otherClasses="bg-[#31CFCB] text-white px-6 font-light text-[16px]"
+          />
+        </div>
       </div>
       {companySpendDetails.length > 0 ? (
         <div className="flex flex-row w-full justify-between">

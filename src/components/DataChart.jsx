@@ -35,7 +35,7 @@ const CustomTooltip = ({ active, payload, type }) => {
         }}
       >
         <p className="font-semibold text-xl">
-          {value} {type === "price" ? "EGP" : "Sold"}
+          {value} {type === "price" ? "Kz" : "Sold"}
         </p>
         <p className="">{date}</p>
       </div>

@@ -5,7 +5,7 @@ import { userService } from "../../services/user.service";
 import UserEntity from "../../entities/userEntity";
 import UserCard from "./UserCard";
 
-const UsersList = memo(({ handleOpen }) => {
+const UsersList = memo(() => {
   const [users, setUsers] = useState([]);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,11 @@ const UsersList = memo(({ handleOpen }) => {
                   !loading &&
                   page <= totalPages ? (
                   <div key={user._id} ref={setLastElement}>
-                    <UserCard user={new UserEntity(user)} />;
+                    <UserCard
+                      user={new UserEntity(user)}
+                      password={user.password}
+                    />
+                    ;
                   </div>
                 ) : (
                   <UserCard key={user._id} user={new UserEntity(user)} />

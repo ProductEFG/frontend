@@ -22,7 +22,7 @@ export const GlobalProvider = ({ children }) => {
   const handleNav = (skip, number) => {
     setEnabledTabs((prev) => {
       let newValue = prev;
-      if (newValue + 1 > 6) {
+      if (newValue + 1 > 6 && !skip) {
         newValue = 0;
 
         setOpenedCompany(null);
@@ -73,24 +73,26 @@ export const GlobalProvider = ({ children }) => {
         companyBought._id
       );
 
-      let sharesQuantity = 0;
-      let valueOfShares = 0;
+      let totalShares = 0;
+      let totalValue = 0;
 
       userStocksData.forEach((stock) => {
-        sharesQuantity += stock.quantity;
-        if (
+        const stockPrice =
           new Date(stock.createdAt).toDateString() === new Date().toDateString()
-        ) {
-          valueOfShares += stock.quantity * companyBought.temp_price;
-        } else {
-          valueOfShares += stock.quantity * companyBought.current_price;
-        }
+            ? companyBought.temp_price
+            : companyBought.current_price;
+
+        totalShares += stock.quantity;
+        totalValue += stock.quantity * stockPrice;
       });
 
+      const averagePricePerShare =
+        totalShares > 0 ? totalValue / totalShares : 0;
+
       const newPosition = {
-        sharesQuantity,
-        valueOfShares,
-        sharePrice: companyBought.current_price,
+        sharesQuantity: totalShares,
+        valueOfShares: totalValue,
+        sharePrice: averagePricePerShare, // Updated to show the average price
       };
 
       sessionStorage.setItem("postBuyPosition", JSON.stringify(newPosition));
@@ -107,25 +109,31 @@ export const GlobalProvider = ({ children }) => {
         companySold.id
       );
 
-      let sharesQuantity = 0;
-      let valueOfShares = 0;
+      let totalShares = 0;
+      let totalValue = 0;
 
       userStocksData.forEach((stock) => {
-        sharesQuantity += stock.quantity;
-        if (
+        const stockPrice =
           new Date(stock.createdAt).toDateString() === new Date().toDateString()
-        ) {
-          valueOfShares += stock.quantity * companySold.temp_price;
-        } else {
-          valueOfShares += stock.quantity * companySold.price;
-        }
+            ? companySold.temp_price
+            : companySold.price;
+
+        totalShares += stock.quantity;
+        totalValue += stock.quantity * stockPrice;
       });
 
+      // Include the newly sold shares in the calculation
+      totalShares += companySold.sold_quantity;
+      totalValue += companySold.sold_quantity * companySold.temp_price;
+
+      // Calculate the weighted average price
+      const averagePricePerShare =
+        totalShares > 0 ? totalValue / totalShares : 0;
+
       const newPosition = {
-        sharesQuantity: sharesQuantity + companySold.sold_quantity,
-        valueOfShares:
-          valueOfShares + companySold.sold_quantity * companySold.temp_price,
-        sharePrice: companySold.price,
+        sharesQuantity: totalShares,
+        valueOfShares: totalValue,
+        sharePrice: averagePricePerShare, // Updated to show the average price
       };
 
       sessionStorage.setItem("postSellPosition", JSON.stringify(newPosition));

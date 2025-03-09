@@ -5,8 +5,6 @@ import { userService } from "../services/user.service.js";
 import { useAuth } from "../providers/AuthProvider.jsx";
 import { useNavigate } from "react-router";
 import UserEntity from "../entities/userEntity.js";
-import { Link } from "react-router-dom";
-import { tabs } from "../data/constants.js";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -60,11 +58,17 @@ const Login = () => {
   }, [navigate, user]);
 
   return (
-    <div className="flex flex-row w-screen h-screen overflow-hidden p-6 justify-center items-center">
+    <div className="flex flex-row w-screen h-screen overflow-hidden justify-center items-center container">
       <div className="flex flex-row big:justify-center big:items-center">
-        <img src="/images/login.svg" alt="Login" className="big:w-[80%]" />
+        <div className="w-[50%] rounded-2xl overflow-hidden">
+          <img
+            src="/images/auth-bg.png"
+            alt="Login"
+            className="w-[100%] h-auto object-cover"
+          />
+        </div>
 
-        <div className="flex flex-col">
+        <div className="flex flex-col w-[50%]">
           <div className="bg-white h-[550px] flex flex-col rounded-xl p-5 m-2 ml-[18px] big:justify-between">
             <div className="flex flex-col justify-center items-center gap-5">
               <div className="flex flex-row justify-center items-center">
